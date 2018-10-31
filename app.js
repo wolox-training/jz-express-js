@@ -10,7 +10,7 @@ const express = require('express'),
   logger = require('./app/logger'),
   DEFAULT_BODY_SIZE_LIMIT = 1024 * 1024 * 10,
   DEFAULT_PARAMETER_LIMIT = 10000;
-
+//test
 const bodyParserJsonConfig = () => ({
   parameterLimit: config.common.api.parameterLimit || DEFAULT_PARAMETER_LIMIT,
   limit: config.common.api.bodySizeLimit || DEFAULT_BODY_SIZE_LIMIT
