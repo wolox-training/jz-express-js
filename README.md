@@ -1,4 +1,4 @@
-# kickkoff
+# jz-training
 
 kickkoff
 

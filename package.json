@@ -4,7 +4,7 @@
   "description": "kickkoff",
   "engines": {
     "node": "8.9.4",
-    "npm": "2.14.2"
+    "npm": "6.4.1"
   },
   "scripts": {
     "console": "node console.js",
