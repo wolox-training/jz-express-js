@@ -87,3 +87,6 @@ For more information check: https://devcenter.heroku.com/articles/getting-starte
 This project is maintained by [Wolox](https://github.com/Wolox) and it was written by [Wolox](http://www.wolox.com.ar).
 
 ![Wolox](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)
+
+### Status
+[![Build Status](travis-ci.org/wolox-training/jz-express-js.png)](travis-ci.org/wolox-training/jz-express-js)
