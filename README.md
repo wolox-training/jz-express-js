@@ -89,4 +89,4 @@ This project is maintained by [Wolox](https://github.com/Wolox) and it was writt
 ![Wolox](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)
 
 ### Status
-[![Build Status](travis-ci.org/wolox-training/jz-express-js.png)](travis-ci.org/wolox-training/jz-express-js)
+[![Build Status](https://travis-ci.org/wolox-training/jz-express-js.svg?branch=master)](https://travis-ci.org/wolox-training/jz-express-js)
