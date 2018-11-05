@@ -2,6 +2,7 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   Rollbar = require('rollbar'),
   morgan = require('morgan'),
+  expressValidator = require('express-validator'),
   path = require('path'),
   config = require('./config'),
   routes = require('./app/routes'),
@@ -28,6 +29,8 @@ const init = () => {
   module.exports = app;
 
   app.use('/docs', express.static(path.join(__dirname, 'docs')));
+
+  app.use(expressValidator());
 
   // Client must send "Content-Type: application/json" header
   app.use(bodyParser.json(bodyParserJsonConfig()));
