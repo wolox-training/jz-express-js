@@ -1,32 +1,31 @@
-const express = require('express');
+const { check, validationResult } = require('express-validator/check'),
+  bcrypt = require('bcryptjs'),
+  error = require('../errors');
 
-const router = express.Router();
+exports.signupValidations = [
+  check('name')
+    .not()
+    .isEmpty()
+    .withMessage('El nombre es requerido'),
 
-const { check, validationResult } = require('express-validator/check');
+  check('lastname')
+    .not()
+    .isEmpty()
+    .withMessage('El apellido es requerido'),
+  check('email')
+    .not()
+    .isEmpty()
+    .withMessage('El correo es requerido')
+    .isEmail()
+    .withMessage('El formato de correo no es valido'),
 
-const error = require('../errors');
-
-router.post(
-  '/users',
-  [
-    check('name', 'El nombre es requerido')
-      .not()
-      .isEmpty(),
-
-    check('lastname', 'El apellido es requerido')
-      .not()
-      .isEmpty(),
-
-    check('email', 'El email es requerido')
-      .not()
-      .isEmpty()
-      .isEmail(),
-
-    check('password', 'Contraseña invalida')
-      .not()
-      .isEmpty()
-      .isLength({ min: 8 })
-  ],
+  check('password')
+    .not()
+    .isEmpty()
+    .isAlphanumeric()
+    .withMessage('Debe ser alphanumerica')
+    .isLength({ min: 8 })
+    .withMessage('Minimo 8 caracteres'),
   (req, res, next) => {
     const name = req.body.name;
     const lastName = req.body.lastname;
@@ -42,6 +41,4 @@ router.post(
       res.status(200).send('test');
     }
   }
-);
-
-module.exports = router;
+];
