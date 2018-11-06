@@ -2,30 +2,31 @@ const { check, validationResult } = require('express-validator/check'),
   bcrypt = require('bcryptjs'),
   error = require('../errors');
 
-exports.signupValidations = [
+exports.signUpValidations = [
   check('name')
     .not()
     .isEmpty()
-    .withMessage('El nombre es requerido'),
+    .withMessage('Name is required'),
 
   check('lastname')
     .not()
     .isEmpty()
-    .withMessage('El apellido es requerido'),
+    .withMessage('Lastname is required'),
   check('email')
     .not()
     .isEmpty()
-    .withMessage('El correo es requerido')
+    .withMessage('email is required')
     .isEmail()
-    .withMessage('El formato de correo no es valido'),
+    .withMessage('the email format is not correct'),
 
   check('password')
     .not()
     .isEmpty()
     .isAlphanumeric()
-    .withMessage('Debe ser alphanumerica')
+    .withMessage('invalid character')
     .isLength({ min: 8 })
-    .withMessage('Minimo 8 caracteres'),
+    .withMessage('minimum 8 characters'),
+
   (req, res, next) => {
     const name = req.body.name;
     const lastName = req.body.lastname;
@@ -35,10 +36,10 @@ exports.signupValidations = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty() || !/@wolox.co\s*$/.test(email)) {
-      const msg = !errors.isEmpty() ? errors.array() : 'dominio de correo incorrecto';
+      const msg = !errors.isEmpty() ? errors.array() : 'email domain incorrect';
       next(error.defaultError(msg));
     } else {
-      res.status(200).send('test');
+      next();
     }
   }
 ];
