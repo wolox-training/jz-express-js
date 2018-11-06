@@ -4,6 +4,8 @@ const router = express.Router();
 
 const { check, validationResult } = require('express-validator/check');
 
+const error = require('../errors');
+
 router.post(
   '/users',
   [
@@ -25,31 +27,20 @@ router.post(
       .isEmpty()
       .isLength({ min: 8 })
   ],
-  (req, res) => {
+  (req, res, next) => {
     const name = req.body.name;
     const lastName = req.body.lastname;
     const email = req.body.email;
     const password = req.body.password;
 
-    // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
 
-    if (/@wolox.co\s*$/.test(email)) {
-      res.status(200).send('test');
+    if (!errors.isEmpty() || !/@wolox.co\s*$/.test(email)) {
+      const msg = !errors.isEmpty() ? errors.array() : 'dominio de correo incorrecto';
+      next(error.defaultError(msg));
     } else {
-      res.status(422).send('Correo con dominio incorrecto');
+      res.status(200).send('test');
     }
-
-    // req.checkBody('name', 'Name is required').noEmpty();
-    // req.checkBody('lastName', 'lastName is required').noEmpty();
-    // req.checkBody('email', 'email is required').noEmpty();
-    // req.checkBody('email', 'email is not valid').isEmail();
-    // req.checkBody('password', 'password is required').noEmpty();
-
-    // console.log(`preueba de que esta monda funciona aqui ${JSON.stringify(user)}`);
   }
 );
 
