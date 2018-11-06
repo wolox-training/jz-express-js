@@ -2,24 +2,55 @@ const express = require('express');
 
 const router = express.Router();
 
-const expressValidator = require('express-validator');
+const { check, validationResult } = require('express-validator/check');
 
-router.use(expressValidator());
+router.post(
+  '/users',
+  [
+    check('name', 'El nombre es requerido')
+      .not()
+      .isEmpty(),
 
-router.post('/users', (req, res) => {
-  const name = req.body.name;
-  const lastName = req.body.name;
-  const email = req.body.name;
-  const password = req.body.name;
+    check('lastname', 'El apellido es requerido')
+      .not()
+      .isEmpty(),
 
-  req.checkBody('name', 'Name is required').noEmpty();
-  req.checkBody('lastName', 'lastName is required').noEmpty();
-  req.checkBody('email', 'email is required').noEmpty();
-  req.checkBody('email', 'email is not valid').isEmail();
-  req.checkBody('password', 'password is required').noEmpty();
+    check('email', 'El email es requerido')
+      .not()
+      .isEmpty()
+      .isEmail(),
 
-  // console.log(`preueba de que esta monda funciona aqui ${JSON.stringify(user)}`);
-  res.send('test');
-});
+    check('password', 'Contraseña invalida')
+      .not()
+      .isEmpty()
+      .isLength({ min: 8 })
+  ],
+  (req, res) => {
+    const name = req.body.name;
+    const lastName = req.body.lastname;
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // Finds the validation errors in this request and wraps them in an object with handy functions
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    if (/@wolox.co\s*$/.test(email)) {
+      res.status(200).send('test');
+    } else {
+      res.status(422).send('Correo con dominio incorrecto');
+    }
+
+    // req.checkBody('name', 'Name is required').noEmpty();
+    // req.checkBody('lastName', 'lastName is required').noEmpty();
+    // req.checkBody('email', 'email is required').noEmpty();
+    // req.checkBody('email', 'email is not valid').isEmail();
+    // req.checkBody('password', 'password is required').noEmpty();
+
+    // console.log(`preueba de que esta monda funciona aqui ${JSON.stringify(user)}`);
+  }
+);
 
 module.exports = router;
