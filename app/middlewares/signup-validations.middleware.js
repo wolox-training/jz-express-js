@@ -1,5 +1,4 @@
 const { check, validationResult } = require('express-validator/check'),
-  bcrypt = require('bcryptjs'),
   error = require('../errors');
 
 exports.signUpValidations = [
@@ -8,7 +7,7 @@ exports.signUpValidations = [
     .isEmpty()
     .withMessage('Name is required'),
 
-  check('lastname')
+  check('lastName')
     .not()
     .isEmpty()
     .withMessage('Lastname is required'),
@@ -28,18 +27,12 @@ exports.signUpValidations = [
     .withMessage('minimum 8 characters'),
 
   (req, res, next) => {
-    const name = req.body.name;
-    const lastName = req.body.lastname;
-    const email = req.body.email;
-    const password = req.body.password;
-
     const errors = validationResult(req);
 
-    if (!errors.isEmpty() || !/@wolox.co\s*$/.test(email)) {
-      const msg = !errors.isEmpty() ? errors.array() : 'email domain incorrect';
-      next(error.defaultError(msg));
-    } else {
-      next();
-    }
+    const msg = !errors.isEmpty()
+      ? errors.array()
+      : /@wolox.co\s*$/.test(req.body.email) ? next() : 'email domain incorrect';
+
+    next(error.defaultError(msg));
   }
 ];

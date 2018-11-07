@@ -6,5 +6,5 @@ exports.init = app => {
   // app.get('/endpoint/get/path', [], controller.methodGET);
   // app.put('/endpoint/put/path', [], controller.methodPUT);
   // app.post('/users', [], controller.methodPOST);
-  app.post('/users', signUpMiddleware.signUpValidations, userController.user_create_post);
+  app.post('/users', signUpMiddleware.signUpValidations, userController.userCreate);
 };

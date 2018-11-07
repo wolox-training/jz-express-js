@@ -1,5 +1,22 @@
-const user = require('../models/user');
+'use strict';
 
-exports.user_create_post = (req, res) => {
-  return res.send('Se ha creado correctamente');
+const bcrypt = require('bcryptjs'),
+  saltRounds = 10,
+  salt = bcrypt.genSaltSync(saltRounds),
+  error = require('../errors'),
+  User = require('../models').User;
+
+exports.userCreate = (req, res) => {
+  const user = req.body;
+
+  user.password = bcrypt.hashSync(user.password, salt);
+
+  User.registerUser(user).then(
+    userCreated => {
+      return res.json(userCreated);
+    },
+    err => {
+      return res.json(err).status(500);
+    }
+  );
 };
