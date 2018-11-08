@@ -6,17 +6,20 @@ const bcrypt = require('bcryptjs'),
   error = require('../errors'),
   User = require('../models').User;
 
-exports.userCreate = (req, res) => {
+exports.userCreate = (req, res, next) => {
   const user = req.body;
 
-  user.password = bcrypt.hashSync(user.password, salt);
-
-  User.registerUser(user).then(
-    userCreated => {
-      return res.json(userCreated);
-    },
-    err => {
-      return res.json(err).status(500);
-    }
-  );
+  try {
+    user.password = bcrypt.hashSync(user.password, salt);
+    User.registerUser(user).then(
+      userCreated => {
+        return res.status(201).json(userCreated);
+      },
+      err => {
+        return res.json(err).status(500);
+      }
+    );
+  } catch (err) {
+    next(err);
+  }
 };
