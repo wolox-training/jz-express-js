@@ -26,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
         }, reject)
         .catch(err => {
           reject(err);
-          logger.info(`${user.firstName} user no created.`);
+          logger.info(`${user.name} user no created.`);
           logger.error(err);
           if (err.name === 'SequelizeUniqueConstraintError') {
-            throw error.DEFAULT_ERROR(['User already exist']);
+            throw error.defaultError(['User already exist']);
           }
           throw error.databaseError(err);
         });
