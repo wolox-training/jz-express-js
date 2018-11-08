@@ -20,6 +20,6 @@ exports.userCreate = (req, res, next) => {
       }
     );
   } catch (err) {
-    next(err);
+    next(error.databaseError(err));
   }
 };
