@@ -28,11 +28,14 @@ exports.signUpValidations = [
 
   (req, res, next) => {
     const errors = validationResult(req);
-
     const msg = !errors.isEmpty()
       ? errors.array()
-      : /@wolox.co\s*$/.test(req.body.email) ? next() : 'email domain incorrect';
+      : !/@wolox+(\.\w{2,3})+$/.test(req.body.email) ? 'email domain incorrect' : 'OK';
 
-    next(error.defaultError(msg));
+    if (msg === 'OK') {
+      next();
+    } else {
+      next(error.defaultError(msg));
+    }
   }
 ];
