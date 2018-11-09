@@ -1,6 +1,6 @@
-const signUpMiddleware = require('./middlewares/signup-validations.middleware'),
-  userController = require('./controllers/user.controller');
+const signUpMiddleware = require('./middlewares/signUpValidations'),
+  userController = require('./controllers/users');
 
 exports.init = app => {
-  app.post('/users', signUpMiddleware.signUpValidations, userController.userCreate);
+  app.post('/users', signUpMiddleware.signUpValidate, userController.userCreate);
 };

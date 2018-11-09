@@ -1,6 +1,9 @@
 'use strict';
 
-const error = require('../errors');
+const bcrypt = require('bcryptjs'),
+  saltRounds = 10,
+  salt = bcrypt.genSaltSync(saltRounds),
+  logger = require('../logger');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -17,5 +20,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  User.createUser = user => {
+    return new Promise((resolve, reject) => {
+      user.password = bcrypt.hashSync(user.password, salt);
+      User.create(user)
+        .then(createdUser => {
+          resolve(createdUser);
+        })
+        .catch(err => {
+          logger.info(`${user.name} user no created.`);
+          logger.error(err);
+          if (err.name === 'SequelizeUniqueConstraintError') {
+            reject('User already exist');
+          }
+          reject(err);
+        });
+    });
+  };
   return User;
 };
