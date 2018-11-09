@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator/check'),
-  { validateUser } = require('../middlewares/validations'),
+  { validateUser } = require('./validations'),
   error = require('../errors');
 
 exports.signUpValidate = (req, res, next) => {
