@@ -2,9 +2,7 @@ const { validateUser } = require('./validations'),
   error = require('../errors');
 
 exports.signUpValidate = (req, res, next) => {
-  const user = req.body;
-
-  const signErrors = validateUser(user);
+  const signErrors = validateUser(req.body);
 
   if (!signErrors.valid) {
     next(error.savingError(signErrors.messages));
