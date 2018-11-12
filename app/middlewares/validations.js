@@ -2,7 +2,7 @@
 
 const validateEmail = user => {
   if (!/^\w+([\.-]?\w+)@wolox+(\.\w{2,3})+$/.test(user.email))
-    return { valid: false, message: 'email domain incorrect' };
+    return { valid: false, message: 'invalid email' };
   return { valid: true };
 };
 
@@ -14,7 +14,7 @@ const validatePassword = user => {
 
 const validateMissingValues = user => {
   for (const member in user) {
-    if (user[member] === undefined) return { message: 'missing value' };
+    if (user[member] === '') return { message: 'missing value' };
   }
   return { valid: true };
 };

@@ -2,12 +2,7 @@ const { validateUser } = require('./validations'),
   error = require('../errors');
 
 exports.signUpValidate = (req, res, next) => {
-  const user = {
-    name: req.body.name,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password
-  };
+  const user = req.body;
 
   const signErrors = validateUser(user);
 
