@@ -10,4 +10,4 @@ exports.DATABASE_ERROR = 'database_error';
 exports.databaseError = message => internalError(message, exports.DATABASE_ERROR);
 
 exports.SAVING_ERROR = 'saving_error';
-exports.saving_error = message => internalError(message, exports.SAVING_ERROR);
+exports.savingError = message => internalError(message, exports.SAVING_ERROR);

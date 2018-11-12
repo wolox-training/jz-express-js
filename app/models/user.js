@@ -3,6 +3,7 @@
 const bcrypt = require('bcryptjs'),
   saltRounds = 10,
   salt = bcrypt.genSaltSync(saltRounds),
+  errors = require('../errors'),
   logger = require('../logger');
 
 module.exports = (sequelize, DataTypes) => {
@@ -21,21 +22,19 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.createUser = user => {
-    return new Promise((resolve, reject) => {
-      user.password = bcrypt.hashSync(user.password, salt);
-      User.create(user)
-        .then(createdUser => {
-          resolve(createdUser);
-        })
-        .catch(err => {
-          logger.info(`${user.name} user no created.`);
-          logger.error(err);
-          if (err.name === 'SequelizeUniqueConstraintError') {
-            reject('User already exist');
-          }
-          reject(err);
-        });
-    });
+    user.password = bcrypt.hashSync(user.password, salt);
+    return User.create(user)
+      .then(createdUser => {
+        logger.info(`User ${createdUser.dataValues.name} created correctly.`);
+      })
+      .catch(err => {
+        logger.info(`${user.name} user no created.`);
+        logger.error(err);
+        if (err.name === 'SequelizeUniqueConstraintError') {
+          throw errors.savingError('User already exist');
+        }
+        throw errors.databaseError(err);
+      });
   };
   return User;
 };

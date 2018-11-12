@@ -1,14 +1,20 @@
 'use strict';
 
-const error = require('../errors'),
-  User = require('../models').User;
+const User = require('../models').User;
 
 exports.userCreate = (req, res, next) => {
-  User.createUser(req.body)
+  const user = {
+    name: req.body.name,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: req.body.password
+  };
+
+  User.createUser(user)
     .then(() => {
       res.status(201).end();
     })
     .catch(err => {
-      next(error.databaseError(err));
+      next(err);
     });
 };
