@@ -10,7 +10,7 @@ exports.userCreate = (req, res, next) => {
     password: req.body.password
   };
 
-  User.createUser(user)
+  return User.createUser(user)
     .then(() => {
       res.status(201).end();
     })

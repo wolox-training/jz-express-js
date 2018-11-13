@@ -11,18 +11,22 @@ const validatePassword = user => {
     return { valid: false, message: 'invalid password' };
   return { valid: true };
 };
+const isDefined = obj => {
+  return obj === '' || obj === undefined || obj === null;
+};
 
-const validateMissingValues = user => {
-  for (const member in user) {
-    if (user[member] === '') return { message: 'missing value' };
+const validateMissingValues = (obj, requiredParams) => {
+  for (const index in requiredParams) {
+    if (isDefined(obj[requiredParams[index]])) return { message: `missing value` };
   }
+
   return { valid: true };
 };
 
-const checkValidations = (validations, object) =>
+const checkValidations = (validations, object, requiredParams) =>
   validations.reduce(
     (result, validation) => {
-      const validationResult = validation(object);
+      const validationResult = validation(object, requiredParams);
 
       if (!validationResult.valid) {
         result.valid = false;
@@ -36,5 +40,5 @@ const checkValidations = (validations, object) =>
     }
   );
 
-exports.validateUser = user =>
-  checkValidations([validateEmail, validatePassword, validateMissingValues], user);
+exports.validateUser = (user, requiredParams) =>
+  checkValidations([validateEmail, validatePassword, validateMissingValues], user, requiredParams);
