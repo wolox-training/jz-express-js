@@ -16,8 +16,8 @@ const isDefined = obj => {
 };
 
 const validateMissingValues = (obj, requiredParams) => {
-  for (const index in requiredParams) {
-    if (isDefined(obj[requiredParams[index]])) return { message: `missing value` };
+  for (const param in requiredParams) {
+    if (isDefined(obj[requiredParams[param]])) return { message: `missing value` };
   }
 
   return { valid: true };
