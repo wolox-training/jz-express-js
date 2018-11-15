@@ -10,7 +10,7 @@ describe('users', () => {
   describe('/users/ POST', () => {
     it('should create a new user without problems', done => {
       createUser(userOne).then(async res => {
-        res.should.have.status(201);
+        expect(res).have.status(201);
         const users = await User.find({
           where: {
             name: 'sarahi',
