@@ -1,7 +1,7 @@
 'use strict';
 
 const chai = require('chai'),
-  server = require('../app');
+  server = require('../../app');
 
 exports.userOne = {
   name: 'sarahi',
@@ -14,11 +14,11 @@ exports.anotherUser = {
   name: 'sarahi',
   lastName: 'torres',
   email: 'sarahidamaris12hg@woloxi.com',
-  password: 'woloxwoloA1520'
+  password: 'facilfacil'
 };
 
 exports.createUser = user =>
   chai
     .request(server)
-    .post('/users/')
+    .post('/users')
     .send(user);
