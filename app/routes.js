@@ -5,4 +5,5 @@ const signUpMiddleware = require('./middlewares/signUpValidations'),
 exports.init = app => {
   app.post('/users', signUpMiddleware.checkValidations, userController.userCreate);
   app.post('/users/sessions/', signInMiddleware.checkValidations, userController.sesion);
+  app.get('/users/');
 };
