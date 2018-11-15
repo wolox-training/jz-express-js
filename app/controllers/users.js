@@ -34,7 +34,10 @@ const giveToken = req => {
 };
 
 exports.sesion = async (req, res, next) => {
-  const user = req.body;
+  const user = {
+    email: req.body.email,
+    password: req.body.password
+  };
   try {
     const result = await User.getUserBy(user.email);
     if (!result) throw error.signInError('user not registered');

@@ -96,7 +96,7 @@ describe('users', () => {
           email: 'sarahi12hg@wolox.com',
           password: 'woloxwoloA1520'
         }).then(res => {
-          res.should.have.status(200);
+          expect(res).have.status(200);
           dictum.chai(res, 'login an user');
           done();
         });
@@ -110,9 +110,9 @@ describe('users', () => {
           password: 'Holahola23'
         }).catch(err => {
           expect(err).have.status(400);
-          err.response.should.be.json;
-          err.response.body.should.have.property('message');
-          err.response.body.should.have.property('internal_code');
+          expect(err.response).be.json;
+          expect(err.response.body).have.property('message');
+          expect(err.response.body).have.property('internal_code');
           expect(err.response.body.internal_code).to.equal('signin_error');
           done();
         });
@@ -124,10 +124,10 @@ describe('users', () => {
         email: 'sarahi12hg@wolox.com',
         password: 'woloxwoloA152022'
       }).catch(err => {
-        err.should.have.status(400);
-        err.response.should.be.json;
-        err.response.body.should.have.property('message');
-        err.response.body.should.have.property('internal_code');
+        expect(err).have.status(400);
+        expect(err.response).be.json;
+        expect(err.response.body).have.property('message');
+        expect(err.response.body).have.property('internal_code');
         expect(err.response.body.internal_code).to.equal('signin_error');
         done();
       });
@@ -138,10 +138,10 @@ describe('users', () => {
         email: 'sarahi12hg@wolo.com',
         password: 'woloxwoloA1520'
       }).catch(err => {
-        err.should.have.status(400);
-        err.response.should.be.json;
-        err.response.body.should.have.property('message');
-        err.response.body.should.have.property('internal_code');
+        expect(err).have.status(400);
+        expect(err.response).be.json;
+        expect(err.response.body).have.property('message');
+        expect(err.response.body).have.property('internal_code');
         expect(err.response.body.internal_code).to.equal('signin_error');
         done();
       });
@@ -152,10 +152,10 @@ describe('users', () => {
         email: 'sarahi12hgi@wolox.com',
         password: 'woloxwoloA1520'
       }).catch(err => {
-        err.should.have.status(400);
-        err.response.should.be.json;
-        err.response.body.should.have.property('message');
-        err.response.body.should.have.property('internal_code');
+        expect(err).have.status(400);
+        expect(err.response).be.json;
+        expect(err.response.body).have.property('message');
+        expect(err.response.body).have.property('internal_code');
         expect(err.response.body.internal_code).to.equal('signin_error');
         done();
       });
