@@ -10,7 +10,7 @@ describe('users', () => {
   describe('/users/ POST', () => {
     it('should create a new user without problems', done => {
       createUser(userOne).then(async res => {
-        res.should.have.status(201);
+        expect(res).have.status(201);
         const users = await User.find({
           where: {
             name: 'sarahi',
@@ -109,7 +109,7 @@ describe('users', () => {
           email: 'sarahi12hgh@wolox.com',
           password: 'Holahola23'
         }).catch(err => {
-          err.should.have.status(400);
+          expect(err).have.status(400);
           err.response.should.be.json;
           err.response.body.should.have.property('message');
           err.response.body.should.have.property('internal_code');
