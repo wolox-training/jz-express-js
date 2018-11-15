@@ -2,9 +2,8 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   server = require('./../app'),
   User = require('../app/models').User,
-  { createUser, login, userOne, anotherUser } = require('./utilUser'),
-  expect = chai.expect,
-  should = chai.should();
+  { createUser, login, userOne, anotherUser } = require('./util/users'),
+  expect = chai.expect;
 
 describe('users', () => {
   describe('/users/ POST', () => {
@@ -36,29 +35,20 @@ describe('users', () => {
         done();
       });
     });
-    it('should fail creation of   user because password is no correct', done => {
-      chai
-        .request(server)
-        .post('/users/')
-        .send({
-          name: 'sarahi',
-          lastName: 'torres',
-          email: 'sarahi12hg@wolox.com',
-          password: 'facilfacil'
-        })
-        .catch(err => {
-          expect(err).have.status(400);
-          expect(err.response).be.json;
-          expect(err.response.body).have.property('message');
-          expect(err.response.body).have.property('internal_code');
-          expect(err.response.body.internal_code).to.equal('saving_error');
-          done();
-        });
+    it('should fail creation of user because password is no correct', done => {
+      createUser(anotherUser).catch(err => {
+        expect(err).have.status(400);
+        expect(err.response).be.json;
+        expect(err.response.body).have.property('message');
+        expect(err.response.body).have.property('internal_code');
+        expect(err.response.body.internal_code).to.equal('saving_error');
+        done();
+      });
     });
-    it('should fail creation of   user because some field is empty', done => {
+    it('should fail creation of user because some field is empty', done => {
       chai
         .request(server)
-        .post('/users/')
+        .post('/users')
         .send({
           name: '',
           lastName: 'torres',
@@ -76,9 +66,7 @@ describe('users', () => {
     });
     it('should fail, email already in use for another user', done => {
       createUser(userOne)
-        .then(() => {
-          return createUser(userOne);
-        })
+        .then(() => createUser(userOne))
         .catch(err => {
           expect(err).have.status(400);
           expect(err.response).be.json;
@@ -89,6 +77,7 @@ describe('users', () => {
         });
     });
   });
+
   describe('/users/sessions/ POST', () => {
     it('should login an user without problems', done => {
       createUser(userOne).then(() => {
@@ -107,7 +96,7 @@ describe('users', () => {
       createUser(userOne).then(() => {
         login({
           email: 'sarahi12hgh@wolox.com',
-          password: 'Holahola23'
+          password: 'woloxwoloA1520'
         }).catch(err => {
           expect(err).have.status(400);
           expect(err.response).be.json;
@@ -136,20 +125,6 @@ describe('users', () => {
     it('should fail login an user because email is not valid', done => {
       login({
         email: 'sarahi12hg@wolo.com',
-        password: 'woloxwoloA1520'
-      }).catch(err => {
-        expect(err).have.status(400);
-        expect(err.response).be.json;
-        expect(err.response.body).have.property('message');
-        expect(err.response.body).have.property('internal_code');
-        expect(err.response.body.internal_code).to.equal('signin_error');
-        done();
-      });
-    });
-
-    it('should fail login an user because email is not registered', done => {
-      login({
-        email: 'sarahi12hgi@wolox.com',
         password: 'woloxwoloA1520'
       }).catch(err => {
         expect(err).have.status(400);
