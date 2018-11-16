@@ -147,7 +147,7 @@ describe('users', () => {
         }).then(res => {
           chai
             .request(server)
-            .get('/users')
+            .get('/users?count=1&page=1')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .then(result => {
               expect(result).have.status(200);
