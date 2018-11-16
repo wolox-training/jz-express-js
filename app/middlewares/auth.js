@@ -1,22 +1,28 @@
 const jwt = require('jsonwebtoken'),
   secret = require('../../config'),
   error = require('../errors'),
+  { encoder, decoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User;
 
-const exist = usermail => User.getUserBy(usermail);
+const getUser = async auth => {
+  const user = decoder(auth),
+    result = await User.getUserBy({
+      email: user.email
+    });
+  return result;
+};
 
-exports.isAuthenticated = async (req, res, next) => {
-  const token = req.headers.accestoken;
+exports.verifyToken = async (req, res, next) => {
+  const auth = req.headers[AUTHORIZATION];
 
-  try {
-    const decoded = jwt.verify(token, secret.common.session.secret);
-    const result = exist(decoded.mail);
-    if (!result) {
-      next(error.authorizationError('invalid token'));
-    } else {
+  if (auth) {
+    const user = await getUser(auth);
+    if (user) {
       next();
+    } else {
+      next(error.authorizationError('Token invalid!'));
     }
-  } catch (err) {
-    next(error.authorizationError('Incorrect format token'));
+  } else {
+    next(error.authorizationError('Token required!!!'));
   }
 };

@@ -1,10 +1,11 @@
 'use strict';
 
-const jwt = require('jsonwebtoken'),
-  bcrypt = require('bcryptjs'),
+const bcrypt = require('bcryptjs'),
+  { encoder, decoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User,
-  error = require('../errors'),
-  config = require('../../config');
+  logger = require('../logger'),
+  { validateUser } = require('../middlewares/validations'),
+  error = require('../errors');
 
 exports.userCreate = (req, res, next) => {
   const user = {
@@ -23,31 +24,28 @@ exports.userCreate = (req, res, next) => {
     });
 };
 
-const giveToken = req => {
-  const token = jwt.sign(
-    {
-      mail: req.email
-    },
-    config.common.session.secret
-  );
-  return token;
-};
-
-exports.sesion = async (req, res, next) => {
+exports.session = async (req, res, next) => {
   const user = {
     email: req.body.email,
     password: req.body.password
   };
   try {
-    const result = await User.getUserBy(user.email);
+    const signErrors = validateUser(user, ['email', 'password']);
+
+    if (!signErrors.valid) {
+      throw error.signInError(signErrors.messages);
+    }
+
+    const result = await User.getUserBy({
+      email: user.email
+    });
     if (!result) throw error.signInError('user not registered');
     return bcrypt.compare(user.password, result.password, (err, validPassword) => {
       if (validPassword) {
-        const token = giveToken(user);
-        const AUTHORIZATION = config.common.session.header_name;
+        logger.info(`${result.name} logged in.`);
+        const token = encoder({ email: result.email });
         res
           .set(AUTHORIZATION, token)
-          .send(`x-access-token ${token}`)
           .status(200)
           .end();
       } else {
