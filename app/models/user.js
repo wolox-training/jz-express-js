@@ -37,10 +37,10 @@ module.exports = (sequelize, DataTypes) => {
       });
   };
 
-  User.getUserBy = email =>
+  User.getUserBy = param =>
     User.findOne({
       where: {
-        email
+        param
       }
     }).catch(err => {
       logger.error(err);
