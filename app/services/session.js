@@ -7,7 +7,7 @@ exports.encoder = payload =>
     {
       email: payload.email
     },
-    secret.common.session.secret
+    secret
   );
 
 exports.AUTHORIZATION = config.common.session.header_name;
