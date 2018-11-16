@@ -12,4 +12,4 @@ exports.encoder = payload =>
 
 exports.AUTHORIZATION = config.common.session.header_name;
 
-exports.decoder = token => jwt.verify(token, secret.common.session.secret);
+exports.decoder = token => jwt.verify(token, secret);
