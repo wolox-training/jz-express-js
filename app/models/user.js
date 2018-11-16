@@ -39,9 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.getUserBy = param =>
     User.findOne({
-      where: {
-        param
-      }
+      where: param
     }).catch(err => {
       logger.error(err);
       throw errors.databaseError(err);
