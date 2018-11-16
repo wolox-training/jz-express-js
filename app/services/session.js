@@ -2,14 +2,14 @@ const jwt = require('jsonwebtoken'),
   config = require('../../config'),
   secret = config.common.session.secret;
 
-const giveToken = req => {
-  const token = jwt.sign(
+exports.encoder = payload =>
+  jwt.sign(
     {
-      mail: req.email
+      email: payload.email
     },
     secret.common.session.secret
   );
-  return token;
-};
 
 exports.AUTHORIZATION = config.common.session.header_name;
+
+exports.decoder = token => jwt.verify(token, secret.common.session.secret);
