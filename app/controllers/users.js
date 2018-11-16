@@ -33,7 +33,7 @@ const giveToken = req => {
   return token;
 };
 
-exports.sesion = async (req, res, next) => {
+exports.session = async (req, res, next) => {
   const user = {
     email: req.body.email,
     password: req.body.password
@@ -45,7 +45,7 @@ exports.sesion = async (req, res, next) => {
       if (validPassword) {
         const token = giveToken(user);
         res
-          .cookie('accesToken', token)
+          .cookie('accessToken', token)
           .send(`x-access-token ${token}`)
           .status(200)
           .end();
