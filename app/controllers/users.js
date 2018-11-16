@@ -35,7 +35,7 @@ exports.session = async (req, res, next) => {
       if (validPassword) {
         const token = encoder({ email: result.email });
         res
-          .cookie(AUTHORIZATION, token)
+          .set(AUTHORIZATION, token)
           .status(200)
           .end();
       } else {
