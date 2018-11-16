@@ -1,7 +1,7 @@
 'use strict';
 
-const jwt = require('jsonwebtoken'),
-  bcrypt = require('bcryptjs'),
+const bcrypt = require('bcryptjs'),
+  { encoder, decoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User,
   error = require('../errors'),
   secret = require('../../config');
@@ -23,16 +23,6 @@ exports.userCreate = (req, res, next) => {
     });
 };
 
-const giveToken = req => {
-  const token = jwt.sign(
-    {
-      mail: req.email
-    },
-    secret.common.session.secret
-  );
-  return token;
-};
-
 exports.session = async (req, res, next) => {
   const user = {
     email: req.body.email,
@@ -43,10 +33,9 @@ exports.session = async (req, res, next) => {
     if (!result) throw error.signInError('user not registered');
     return bcrypt.compare(user.password, result.password, (err, validPassword) => {
       if (validPassword) {
-        const token = giveToken(user);
+        const token = encoder({ email: result.email });
         res
-          .cookie('accessToken', token)
-          .send(`x-access-token ${token}`)
+          .cookie(AUTHORIZATION, token)
           .status(200)
           .end();
       } else {
