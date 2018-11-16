@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken'),
   bcrypt = require('bcryptjs'),
   User = require('../models').User,
   error = require('../errors'),
-  secret = require('../../config');
+  config = require('../../config');
 
 exports.userCreate = (req, res, next) => {
   const user = {
@@ -28,7 +28,7 @@ const giveToken = req => {
     {
       mail: req.email
     },
-    secret.common.session.secret
+    config.common.session.secret
   );
   return token;
 };
@@ -44,8 +44,9 @@ exports.sesion = async (req, res, next) => {
     return bcrypt.compare(user.password, result.password, (err, validPassword) => {
       if (validPassword) {
         const token = giveToken(user);
+        const AUTHORIZATION = config.common.session.header_name;
         res
-          .cookie('accesToken', token)
+          .set(AUTHORIZATION, token)
           .send(`x-access-token ${token}`)
           .status(200)
           .end();

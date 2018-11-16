@@ -14,3 +14,6 @@ exports.savingError = message => internalError(message, exports.SAVING_ERROR);
 
 exports.SIGNIN_ERROR = 'signin_error';
 exports.signInError = message => internalError(message, exports.SIGNIN_ERROR);
+
+exports.AUTHORIZATE_ERROR = 'authorization_error';
+exports.authorizationError = message => internalError(message, exports.AUTHORIZATE_ERROR);
