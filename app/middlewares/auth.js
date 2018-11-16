@@ -20,9 +20,9 @@ exports.verifyToken = async (req, res, next) => {
     if (user) {
       next();
     } else {
-      next(error.authorizationError('Token invalid!'));
+      next(error.authorizationError('Token is invalid!'));
     }
   } else {
-    next(error.authorizationError('Token required!!!'));
+    next(error.authorizationError('Token is required!'));
   }
 };
