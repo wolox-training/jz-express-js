@@ -3,8 +3,9 @@
 const bcrypt = require('bcryptjs'),
   { encoder, decoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User,
-  error = require('../errors'),
-  secret = require('../../config');
+  logger = require('../logger'),
+  { validateUser } = require('../middlewares/validations'),
+  error = require('../errors');
 
 exports.userCreate = (req, res, next) => {
   const user = {
@@ -29,10 +30,19 @@ exports.session = async (req, res, next) => {
     password: req.body.password
   };
   try {
-    const result = await User.getUserBy(user.email);
+    const signErrors = validateUser(user, ['email', 'password']);
+
+    if (!signErrors.valid) {
+      throw error.signInError(signErrors.messages);
+    }
+
+    const result = await User.getUserBy({
+      email: user.email
+    });
     if (!result) throw error.signInError('user not registered');
     return bcrypt.compare(user.password, result.password, (err, validPassword) => {
       if (validPassword) {
+        logger.info(`${result.name} logged in.`);
         const token = encoder({ email: result.email });
         res
           .set(AUTHORIZATION, token)
