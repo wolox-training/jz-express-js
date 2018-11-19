@@ -7,7 +7,12 @@ const bcrypt = require('bcryptjs'),
   { validateUser } = require('../middlewares/validations'),
   error = require('../errors');
 
-exports.userCreate = (req, res, next) => {
+const roleUser = {
+  ADMINISTRATOR: 'administrator',
+  REGULAR: 'regular'
+};
+
+exports.userCreate = async (req, res, next) => {
   const user = {
     name: req.body.name,
     lastName: req.body.lastName,
@@ -71,6 +76,35 @@ exports.userList = async (req, res, next) => {
     const result = await User.getAllUserBy(query.count, query.offset),
       pages = Math.ceil(result.count / query.count);
     res.json({ users: result.rows, count: result.count, pages });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.singUpAdmin = async (req, res, next) => {
+  try {
+    const user = {
+      name: req.body.name,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password
+    };
+    const result = await User.getUserBy({
+      email: user.email
+    });
+
+    if (!result) {
+      const signErrors = validateUser(user, ['email', 'password', 'name', 'lastName']);
+
+      if (!signErrors.valid) {
+        throw error.signInError(signErrors.messages);
+      }
+      await User.createUser(user);
+    }
+    user.roleUser = roleUser.ADMINISTRATOR;
+    await User.createAdmin(user);
+
+    res.status(201).send(`User created correctly.`);
   } catch (err) {
     next(err);
   }
