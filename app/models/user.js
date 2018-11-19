@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      paranoid: true,
       underscored: true,
       freezeTableName: true
     }
@@ -31,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.createUser = user => {
     user.password = bcrypt.hashSync(user.password, salt);
+
     return User.create(user)
       .then(createdUser => {
         logger.info(`User ${createdUser.dataValues.name} created correctly.`);
@@ -63,5 +63,12 @@ module.exports = (sequelize, DataTypes) => {
       throw errors.databaseError(err);
     });
 
+  User.createAdmin = user => {
+    return User.update({ roleUser: user.roleUser }, { where: { email: user.email } }).catch(err => {
+      logger.info(`${user.name} user no created.`);
+      logger.error(err);
+      throw errors.defaultDatabase(err);
+    });
+  };
   return User;
 };
