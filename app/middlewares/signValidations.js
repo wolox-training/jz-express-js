@@ -1,11 +1,27 @@
 const { validateUser } = require('./validations'),
   error = require('../errors');
 
-exports.checkValidations = (req, res, next) => {
-  const signErrors = validateUser(req.body, ['name', 'lastName', 'email', 'password']);
+exports.signUpCheckValidations = user => {
+  const result = validateUser(user, ['name', 'lastName', 'email', 'password']);
+  return {
+    result,
+    errors: error.savingError
+  };
+};
 
-  if (!signErrors.valid) {
-    next(error.savingError(signErrors.messages));
+exports.signInCheckValidations = user => {
+  const result = validateUser(user, ['email', 'password']);
+  return {
+    result,
+    errors: error.signInError
+  };
+};
+
+exports.validatorMiddleware = validatorFunction => (req, res, next) => {
+  const validationResult = validatorFunction(req.body);
+
+  if (!validationResult.result.valid) {
+    next(validationResult.errors(validationResult.result.messages));
   } else {
     next();
   }
