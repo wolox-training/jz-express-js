@@ -24,12 +24,6 @@ exports.anotherUserMore = {
   password: 'woloxwoloA1520'
 };
 
-exports.anotherUserMoreSend = {
-  name: 'sarahi',
-  lastName: 'torres',
-  email: 'sarahidamaris12hg@wolox.com'
-};
-
 exports.createUser = user =>
   chai
     .request(server)

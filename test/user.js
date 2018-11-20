@@ -2,7 +2,7 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   server = require('./../app'),
   User = require('../app/models').User,
-  { createUser, login, userOne, anotherUser, anotherUserMore, anotherUserMoreSend } = require('./util/users'),
+  { createUser, login, userOne, anotherUser, anotherUserMore } = require('./util/users'),
   config = require('../config'),
   expect = chai.expect;
 
@@ -255,7 +255,7 @@ describe('users', () => {
               .request(server)
               .post('/admin/users')
               .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-              .send(anotherUserMoreSend)
+              .send(anotherUserMore)
               .then(async result => {
                 expect(result).have.status(201);
                 const users = await User.find({
