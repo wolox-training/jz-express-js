@@ -30,12 +30,6 @@ exports.session = async (req, res, next) => {
     password: req.body.password
   };
   try {
-    const signErrors = validateUser(user, ['email', 'password']);
-
-    if (!signErrors.valid) {
-      throw error.signInError(signErrors.messages);
-    }
-
     const result = await User.getUserBy({
       email: user.email
     });
