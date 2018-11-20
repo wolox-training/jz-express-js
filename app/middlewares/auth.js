@@ -4,12 +4,13 @@ const jwt = require('jsonwebtoken'),
   { encoder, decoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User;
 
-const getUser = async auth => {
-  const user = decoder(auth),
-    result = await User.getUserBy({
-      email: user.email
-    });
-  return result;
+const getUser = auth => {
+  const user = decoder(auth);
+  return User.getUserBy({
+    email: user.email
+  }).then(userExists => {
+    return userExists;
+  });
 };
 
 exports.verifyToken = async (req, res, next) => {
