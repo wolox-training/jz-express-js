@@ -70,7 +70,7 @@ exports.userList = async (req, res, next) => {
 
     const result = await User.getAllUserBy(query.count, query.offset),
       pages = Math.ceil(result.count / query.count);
-    res.json({ users: result.rows, count: result.count, pages });
+    res.send({ users: result.rows, count: result.count, pages });
   } catch (err) {
     next(err);
   }
