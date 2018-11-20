@@ -12,13 +12,18 @@ const roleUser = {
   REGULAR: 'regular'
 };
 
-exports.userCreate = async (req, res, next) => {
+const parseUser = data => {
   const user = {
-    name: req.body.name,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password
+    name: data.name,
+    lastName: data.lastName,
+    email: data.email,
+    password: data.password
   };
+  return user;
+};
+
+exports.userCreate = async (req, res, next) => {
+  const user = parseUser(req.body);
 
   return User.createUser(user)
     .then(() => {
@@ -83,12 +88,7 @@ exports.userList = async (req, res, next) => {
 
 exports.singUpAdmin = async (req, res, next) => {
   try {
-    const user = {
-      name: req.body.name,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: req.body.password
-    };
+    const user = parseUser(req.body);
     const result = await User.getUserBy({
       email: user.email
     });
