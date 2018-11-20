@@ -88,17 +88,12 @@ exports.singUpAdmin = async (req, res, next) => {
     });
 
     if (!result) {
-      const signErrors = validateUser(user, ['email', 'password', 'name', 'lastName']);
-
-      if (!signErrors.valid) {
-        throw error.signInError(signErrors.messages);
-      }
       await User.createUser(user);
     }
     user.roleUser = roleUser.ADMINISTRATOR;
     await User.createAdmin(user);
 
-    res.status(201).send(`User created correctly.`);
+    res.status(201).send(`User admin created correctly.`);
   } catch (err) {
     next(err);
   }
