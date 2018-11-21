@@ -1,9 +1,12 @@
-const signUpMiddleware = require('./middlewares/signUpValidations'),
-  auth = require('./middlewares/auth'),
+const {
+    validatorMiddleware,
+    signUpCheckValidations,
+    signInCheckValidations
+  } = require('./middlewares/checkValidations'),
   userController = require('./controllers/users');
 
 exports.init = app => {
-  app.post('/users', signUpMiddleware.checkValidations, userController.userCreate);
-  app.post('/users/sessions', userController.session);
+  app.post('/users', validatorMiddleware(signUpCheckValidations), userController.userCreate);
+  app.post('/users/sessions', validatorMiddleware(signInCheckValidations), userController.signIn);
   app.get('/users/', auth.verifyToken, userController.userList);
 };
