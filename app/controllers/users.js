@@ -29,20 +29,20 @@ exports.userCreate = async (req, res, next) => {
     });
 };
 
-exports.session = async (req, res, next) => {
+exports.signIn = async (req, res, next) => {
   const user = {
     email: req.body.email,
     password: req.body.password
   };
   try {
-    const result = await User.getUserBy({
+    const userExist = await User.getUserBy({
       email: user.email
     });
-    if (!result) throw error.signInError('user not registered');
-    return bcrypt.compare(user.password, result.password, (err, validPassword) => {
+    if (!userExist) throw error.signInError('user not registered');
+    return bcrypt.compare(user.password, userExist.password, (err, validPassword) => {
       if (validPassword) {
-        logger.info(`${result.name} logged in.`);
-        const token = encoder({ email: result.email });
+        logger.info(`${userExist.name} logged in.`);
+        const token = encoder({ email: userExist.email });
         res
           .set(AUTHORIZATION, token)
           .status(200)
@@ -69,7 +69,7 @@ exports.userList = async (req, res, next) => {
 
     const result = await User.getAllUserBy(query.count, query.offset),
       pages = Math.ceil(result.count / query.count);
-    res.json({ users: result.rows, count: result.count, pages });
+    res.send({ users: result.rows, count: result.count, pages });
   } catch (err) {
     next(err);
   }
