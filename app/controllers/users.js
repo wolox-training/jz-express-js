@@ -78,16 +78,9 @@ exports.userList = async (req, res, next) => {
 exports.singUpAdmin = async (req, res, next) => {
   try {
     const user = parseUser(req.body);
-    const result = await User.getUserBy({
-      email: user.email
-    });
-
-    if (!result) {
-      await User.createUser(user);
-    }
     user.roleUser = roleUser.ADMINISTRATOR;
-    await User.createAdmin(user);
-
+    await User.updateUser(user);
+    logger.info(`${user.name}  update.`);
     res.status(201).send(`User admin created correctly.`);
   } catch (err) {
     next(err);
