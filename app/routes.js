@@ -7,5 +7,5 @@ const {
 
 exports.init = app => {
   app.post('/users', validatorMiddleware(signUpCheckValidations), userController.userCreate);
-  app.post('/users/sessions', validatorMiddleware(signInCheckValidations), userController.session);
+  app.post('/users/sessions', validatorMiddleware(signInCheckValidations), userController.signIn);
 };
