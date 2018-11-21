@@ -1,16 +1,11 @@
 'use strict';
 
 const bcrypt = require('bcryptjs'),
-  { encoder, decoder, AUTHORIZATION } = require('../services/session'),
+  { encoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User,
   logger = require('../logger'),
-  { validateUser } = require('../middlewares/validations'),
+  { roleUser } = require('./constants'),
   error = require('../errors');
-
-const roleUser = {
-  ADMINISTRATOR: 'administrator',
-  REGULAR: 'regular'
-};
 
 const parseUser = data => {
   const user = {
