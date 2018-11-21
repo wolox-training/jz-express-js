@@ -3,6 +3,7 @@ const chai = require('chai'),
   server = require('./../app'),
   User = require('../app/models').User,
   { createUser, login, userOne, anotherUser } = require('./util/users'),
+  config = require('../config'),
   expect = chai.expect;
 
 describe('users', () => {
@@ -134,6 +135,43 @@ describe('users', () => {
         expect(err.response.body.internal_code).to.equal('signin_error');
         done();
       });
+    });
+  });
+
+  describe('/users GET', () => {
+    it('should list all users by pagination without problems because are loged', done => {
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .get('/users?count=1&page=1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .then(result => {
+              expect(result).have.status(200);
+              expect(result.body.count).to.be.equal(1);
+              expect(result.body.pages).to.be.equal(1);
+              dictum.chai(result, 'get all user with pagination');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should fail list all users by pagination because token is no sent sent', done => {
+      chai
+        .request(server)
+        .get('/users?count=1&page=1')
+        .catch(err => {
+          expect(err).have.status(401);
+          expect(err.response).be.json;
+          expect(err.response.body).have.property('message');
+          expect(err.response.body).have.property('internal_code');
+          expect(err.response.body.internal_code).to.equal('authorization_error');
+          done();
+        });
     });
   });
 });
