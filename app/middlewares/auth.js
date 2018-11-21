@@ -8,8 +8,6 @@ const getUser = auth => {
   const user = decoder(auth);
   return User.getUserBy({
     email: user.email
-  }).then(userExists => {
-    return userExists;
   });
 };
 
