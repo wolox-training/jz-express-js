@@ -3,6 +3,7 @@ const {
     signUpCheckValidations,
     signInCheckValidations
   } = require('./middlewares/checkValidations'),
+  auth = require('./middlewares/auth'),
   userController = require('./controllers/users');
 
 exports.init = app => {
