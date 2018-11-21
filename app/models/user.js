@@ -63,9 +63,10 @@ module.exports = (sequelize, DataTypes) => {
       throw errors.databaseError(err);
     });
 
-  User.createAdmin = user => {
-    return User.update({ roleUser: user.roleUser }, { where: { email: user.email } }).catch(err => {
-      logger.info(`${user.name} user no created.`);
+  User.updateUser = user => {
+    user.password = bcrypt.hashSync(user.password, salt);
+    return User.upsert(user).catch(err => {
+      logger.info(`${user.name}  not update.`);
       logger.error(err);
       throw errors.defaultDatabase(err);
     });
