@@ -22,3 +22,9 @@ exports.createUser = user =>
     .request(server)
     .post('/users')
     .send(user);
+
+exports.login = credentials =>
+  chai
+    .request(server)
+    .post('/users/sessions')
+    .send(credentials);

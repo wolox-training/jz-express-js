@@ -2,7 +2,7 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   server = require('./../app'),
   User = require('../app/models').User,
-  { createUser, userOne, anotherUser } = require('./util/users'),
+  { createUser, login, userOne, anotherUser } = require('./util/users'),
   expect = chai.expect;
 
 describe('users', () => {
@@ -75,6 +75,65 @@ describe('users', () => {
           expect(err.response.body.internal_code).to.equal('saving_error');
           done();
         });
+    });
+  });
+
+  describe('/users/sessions/ POST', () => {
+    it('should login an user without problems', done => {
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          expect(res).have.status(200);
+          dictum.chai(res, 'login an user');
+          done();
+        });
+      });
+    });
+
+    it('should fail login a user because the email is not registered', done => {
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hgh@wolox.com',
+          password: 'woloxwoloA1520'
+        }).catch(err => {
+          expect(err).have.status(400);
+          expect(err.response).be.json;
+          expect(err.response.body).have.property('message');
+          expect(err.response.body).have.property('internal_code');
+          expect(err.response.body.internal_code).to.equal('signin_error');
+          done();
+        });
+      });
+    });
+
+    it('should fail login an user because password is not valid', done => {
+      login({
+        email: 'sarahi12hg@wolox.com',
+        password: 'woloxwoloA152022'
+      }).catch(err => {
+        expect(err).have.status(400);
+        expect(err.response).be.json;
+        expect(err.response.body).have.property('message');
+        expect(err.response.body).have.property('internal_code');
+        expect(err.response.body.internal_code).to.equal('signin_error');
+        done();
+      });
+    });
+
+    it('should fail login an user because email is not valid', done => {
+      login({
+        email: 'sarahi12hg@wolo.com',
+        password: 'woloxwoloA1520'
+      }).catch(err => {
+        expect(err).have.status(400);
+        expect(err.response).be.json;
+        expect(err.response.body).have.property('message');
+        expect(err.response.body).have.property('internal_code');
+        expect(err.response.body.internal_code).to.equal('signin_error');
+        done();
+      });
     });
   });
 });
