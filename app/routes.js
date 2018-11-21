@@ -2,7 +2,7 @@ const {
     validatorMiddleware,
     signUpCheckValidations,
     signInCheckValidations
-  } = require('./middlewares/signValidations'),
+  } = require('./middlewares/checkValidations'),
   userController = require('./controllers/users');
 
 exports.init = app => {
