@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken'),
   secret = require('../../config'),
   error = require('../errors'),
   { decoder, AUTHORIZATION } = require('../services/session'),
+  { roleUser } = require('../controllers/constants'),
   User = require('../models').User;
 
 const getUser = auth => {
@@ -9,11 +10,6 @@ const getUser = auth => {
   return User.getUserBy({
     email: user.email
   });
-};
-
-const roleUser = {
-  ADMINISTRATOR: 'administrator',
-  REGULAR: 'regular'
 };
 
 exports.verifyToken = async (req, res, next) => {
