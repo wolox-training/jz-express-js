@@ -1,5 +1,6 @@
 const auth = require('./middlewares/auth'),
   userController = require('./controllers/users'),
+  albumController = require('./controllers/albums'),
   {
     validatorMiddleware,
     signUpCheckValidations,
@@ -14,5 +15,6 @@ exports.init = app => {
     '/admin/users',
     [auth.verifyToken, auth.verifyPermission, validatorMiddleware(signUpCheckValidations)],
     userController.signUpAdmin
-  );
+  ),
+    app.get('/albums', auth.verifyToken, albumController.albumList);
 };
