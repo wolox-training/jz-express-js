@@ -75,12 +75,12 @@ exports.userList = async (req, res, next) => {
   }
 };
 
-exports.singUpAdmin = async (req, res, next) => {
+exports.signUpAdmin = async (req, res, next) => {
   try {
     const user = parseUser(req.body);
     user.roleUser = roleUser.ADMINISTRATOR;
     await User.upsertAdminUser(user);
-    logger.info(`${user.name}  update.`);
+    logger.info(`${user.name}  User admin created or update correctly.`);
     res.status(201).send(`User admin created correctly.`);
   } catch (err) {
     next(err);

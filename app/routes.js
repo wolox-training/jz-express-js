@@ -13,6 +13,6 @@ exports.init = app => {
   app.post(
     '/admin/users',
     [auth.verifyToken, auth.verifyPermission, validatorMiddleware(signUpCheckValidations)],
-    userController.singUpAdmin
+    userController.signUpAdmin
   );
 };
