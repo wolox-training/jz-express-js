@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
       throw errors.databaseError(err);
     });
 
-  User.updateUser = user => {
+  User.upsertAdminUser = user => {
     user.password = bcrypt.hashSync(user.password, salt);
     return User.upsert(user).catch(err => {
       logger.info(`${user.name}  not update.`);

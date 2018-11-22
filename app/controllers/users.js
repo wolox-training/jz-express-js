@@ -79,7 +79,7 @@ exports.singUpAdmin = async (req, res, next) => {
   try {
     const user = parseUser(req.body);
     user.roleUser = roleUser.ADMINISTRATOR;
-    await User.updateUser(user);
+    await User.upsertAdminUser(user);
     logger.info(`${user.name}  update.`);
     res.status(201).send(`User admin created correctly.`);
   } catch (err) {
