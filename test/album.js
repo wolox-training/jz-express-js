@@ -170,8 +170,8 @@ describe('albums', () => {
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .send()
             .catch(err => {
-              expect(err.response.body.message).to.be.equal('connection failed');
-              expect(err).have.status(503);
+              expect(err.response.body.message).to.be.equal('Error 404 No found');
+              expect(err).have.status(404);
               done();
             });
         });
