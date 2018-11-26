@@ -9,7 +9,7 @@ const axios = require('axios'),
 exports.getAll = async source => {
   const albumData = await axios.get(`${url}${source}`).catch(err => {
     logger.error(err);
-    throw errors.albumsApiError('Connection failed');
+    throw errors.albumsApiError('Error 404 Not Found');
   });
   return albumData.data;
 };
