@@ -20,3 +20,9 @@ exports.authorizationError = message => internalError(message, exports.AUTHORIZA
 
 exports.ALBUMS_API_ERROR = 'albums_api_error';
 exports.albumsApiError = message => internalError(message, exports.ALBUMS_API_ERROR);
+
+exports.ALBUMS_NOT_FOUND = 'albums_not_found';
+exports.albumsNotFound = message => internalError(message, exports.ALBUMS_NOT_FOUND);
+
+exports.ALBUMS_API_REDIRECTION = 'albums_api_redirection';
+exports.albumsApiRedirection = message => internalError(message, exports.ALBUMS_API_REDIRECTION);
