@@ -43,7 +43,7 @@ describe('albums', () => {
     it('should fail list albums because the service fail', done => {
       nock(url)
         .get('')
-        .reply(503);
+        .reply(404);
 
       createUser(userOne).then(() => {
         login({
@@ -52,10 +52,10 @@ describe('albums', () => {
         }).then(res => {
           chai
             .request(server)
-            .get('/albums/')
+            .get('/albums')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .catch(err => {
-              expect(err).have.status(503);
+              expect(err).have.status(404);
               done();
             });
         });
@@ -65,7 +65,7 @@ describe('albums', () => {
     it('should fail list albums because token is no sent or the  user is not logged', done => {
       chai
         .request(server)
-        .get('/albums/')
+        .get('/albums')
         .catch(err => {
           expect(err).have.status(401);
           expect(err.response).be.json;
