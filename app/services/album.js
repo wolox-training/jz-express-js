@@ -9,7 +9,11 @@ const axios = require('axios'),
 exports.getAll = async source => {
   const albumData = await axios.get(`${url}${source}`).catch(err => {
     logger.error(err);
-    throw errors.albumsApiError('Error 404 Not Found');
+    if (err.response.status === 300)
+      throw errors.ALBUMS_API_REDIRECTION('client must take additional action to complete the request');
+    if (err.response.status === 404) throw errors.albumsNotFound('Error 404 No found');
+
+    throw errors.albumsApiError('service not available');
   });
   return albumData.data;
 };
