@@ -1,10 +1,38 @@
 'use strict';
 
-const { getAll } = require('../services/album');
+const { getResources } = require('../services/album'),
+  { decoder, AUTHORIZATION } = require('../services/session'),
+  User = require('../models').User,
+  Album = require('../models').Album;
+
+const getUser = auth => {
+  const user = decoder(auth);
+  return User.getUserBy({
+    email: user.email
+  });
+};
 
 exports.albumList = (req, res, next) =>
-  getAll('/albums')
+  getResources('/albums')
     .then(albums => {
       res.status(200).send(albums);
     })
     .catch(next);
+
+exports.buyAlbum = async (req, res, next) => {
+  try {
+    const album = await getResources(`/albums/${req.params.id}`);
+    const auth = req.headers[AUTHORIZATION];
+    const user = await getUser(auth);
+
+    const newAlbum = {
+      albumId: album.id,
+      userId: user.id
+    };
+    await Album.createModel(newAlbum);
+
+    res.status(200).send(album);
+  } catch (err) {
+    next(err);
+  }
+};
