@@ -4,15 +4,21 @@ const bcrypt = require('bcryptjs'),
   { encoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User,
   logger = require('../logger'),
+  { roleUser } = require('./constants'),
   error = require('../errors');
 
-exports.userCreate = (req, res, next) => {
+const parseUser = data => {
   const user = {
-    name: req.body.name,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password
+    name: data.name,
+    lastName: data.lastName,
+    email: data.email,
+    password: data.password
   };
+  return user;
+};
+
+exports.userCreate = async (req, res, next) => {
+  const user = parseUser(req.body);
 
   return User.createUser(user)
     .then(() => {
@@ -64,6 +70,18 @@ exports.userList = async (req, res, next) => {
     const result = await User.getAllUserBy(query.count, query.offset),
       pages = Math.ceil(result.count / query.count);
     res.send({ users: result.rows, count: result.count, pages });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.signUpAdmin = async (req, res, next) => {
+  try {
+    const user = parseUser(req.body);
+    user.roleUser = roleUser.ADMINISTRATOR;
+    await User.upsertAdminUser(user);
+    logger.info(`${user.name}  User admin created or update correctly.`);
+    res.status(201).send(`User admin created correctly.`);
   } catch (err) {
     next(err);
   }

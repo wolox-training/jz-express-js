@@ -10,11 +10,18 @@ exports.userOne = {
   password: 'woloxwoloA1520'
 };
 
-exports.anotherUser = {
+exports.userWithBadPassword = {
   name: 'sarahi',
   lastName: 'torres',
   email: 'sarahidamaris12hg@woloxi.com',
   password: 'facilfacil'
+};
+
+exports.anotherUser = {
+  name: 'sarahi',
+  lastName: 'torres',
+  email: 'sarahidamaris12hg@wolox.com',
+  password: 'woloxwoloA1520'
 };
 
 exports.createUser = user =>

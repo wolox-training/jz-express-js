@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken'),
   secret = require('../../config'),
   error = require('../errors'),
-  { encoder, decoder, AUTHORIZATION } = require('../services/session'),
+  { decoder, AUTHORIZATION } = require('../services/session'),
+  { roleUser } = require('../controllers/constants'),
   User = require('../models').User;
 
 const getUser = auth => {
@@ -24,4 +25,14 @@ exports.verifyToken = async (req, res, next) => {
   } else {
     next(error.authorizationError('Token is required!'));
   }
+};
+
+exports.verifyPermission = async (req, res, next) => {
+  const auth = req.headers[AUTHORIZATION];
+
+  const user = await getUser(auth);
+
+  user.roleUser === roleUser.REGULAR
+    ? next(error.authorizationError('Is not  an Administrator user'))
+    : next();
 };

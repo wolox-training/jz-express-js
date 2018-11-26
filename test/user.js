@@ -2,7 +2,7 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   server = require('./../app'),
   User = require('../app/models').User,
-  { createUser, login, userOne, anotherUser } = require('./util/users'),
+  { createUser, login, userOne, userWithBadPassword, anotherUser } = require('./util/users'),
   config = require('../config'),
   expect = chai.expect;
 
@@ -27,7 +27,7 @@ describe('users', () => {
       });
     });
     it('should fail creation of user because email domain is not valid', done => {
-      createUser(anotherUser).catch(err => {
+      createUser(userWithBadPassword).catch(err => {
         expect(err).have.status(400);
         expect(err.response).be.json;
         expect(err.response.body).have.property('message');
@@ -37,7 +37,7 @@ describe('users', () => {
       });
     });
     it('should fail creation of user because password is no correct', done => {
-      createUser(anotherUser).catch(err => {
+      createUser(userWithBadPassword).catch(err => {
         expect(err).have.status(400);
         expect(err.response).be.json;
         expect(err.response.body).have.property('message');
@@ -172,6 +172,108 @@ describe('users', () => {
           expect(err.response.body.internal_code).to.equal('authorization_error');
           done();
         });
+    });
+  });
+
+  describe('/admin/users/ POST', () => {
+    it('should fail because is not an admin requester', done => {
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/admin/users')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send(anotherUser)
+            .catch(err => {
+              expect(err).have.status(401);
+              done();
+            });
+        });
+      });
+    });
+
+    it('should signup an admin user without problems because the requester is admin', done => {
+      const admin = new User({
+        name: 'damarisTorres',
+        lastName: 'palacios',
+        email: 'dami@wolox.com',
+        password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
+        roleUser: 'administrator'
+      });
+
+      admin.save().then(() => {
+        login({
+          email: 'dami@wolox.com',
+          password: 'woloxwoloA152022'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/admin/users')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send(anotherUser)
+            .then(async result => {
+              expect(result).have.status(201);
+
+              const users = await User.find({
+                where: {
+                  name: 'sarahi',
+                  lastName: 'torres',
+                  email: 'sarahidamaris12hg@wolox.com'
+                }
+              });
+
+              expect(users.password).to.not.equal('woloxwoloA1520');
+              expect(users.name).to.be.equal('sarahi');
+              expect(users.email).to.be.equal('sarahidamaris12hg@wolox.com');
+              expect(users.roleUser).to.be.equal('administrator');
+              dictum.chai(result, 'create a new admin user');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should update an regular user without problems because the requester is admin', done => {
+      const admin = new User({
+        name: 'damarisTorres',
+        lastName: 'palacios',
+        email: 'dami@wolox.com',
+        password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
+        roleUser: 'administrator'
+      });
+
+      createUser(anotherUser).then(() => {
+        admin.save().then(() => {
+          login({
+            email: 'dami@wolox.com',
+            password: 'woloxwoloA152022'
+          }).then(async res => {
+            chai
+              .request(server)
+              .post('/admin/users')
+              .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+              .send(anotherUser)
+              .then(async result => {
+                expect(result).have.status(201);
+                const users = await User.find({
+                  where: {
+                    name: 'sarahi',
+                    lastName: 'torres',
+                    email: 'sarahidamaris12hg@wolox.com'
+                  }
+                });
+                expect(users.password).to.not.equal('woloxwoloA1520');
+                expect(users.name).to.be.equal('sarahi');
+                expect(users.email).to.be.equal('sarahidamaris12hg@wolox.com');
+                expect(users.roleUser).to.be.equal('administrator');
+                done();
+              });
+          });
+        });
+      });
     });
   });
 });
