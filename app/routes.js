@@ -11,11 +11,16 @@ exports.init = app => {
   app.post('/users', validatorMiddleware(signUpCheckValidations), userController.userCreate);
   app.post('/users/sessions', validatorMiddleware(signInCheckValidations), userController.signIn);
   app.get('/users', auth.verifyToken, userController.userList);
+  app.get(
+    '/users/:user_id/albums',
+    [auth.verifyToken, auth.verifyAccess],
+    albumController.listPurchasedAlbums
+  );
   app.post(
     '/admin/users',
     [auth.verifyToken, auth.verifyPermission, validatorMiddleware(signUpCheckValidations)],
     userController.signUpAdmin
-  ),
-    app.get('/albums', auth.verifyToken, albumController.albumList);
+  );
+  app.get('/albums', auth.verifyToken, albumController.albumList);
   app.post('/albums/:id', auth.verifyToken, albumController.buyAlbum);
 };
