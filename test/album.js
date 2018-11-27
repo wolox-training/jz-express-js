@@ -104,7 +104,6 @@ describe('albums', () => {
                   userId: 1
                 }
               });
-              expect(album).to.be.a('object');
               expect(album.albumId).to.be.equal(1);
               expect(album.userId).to.be.equal(1);
               dictum.chai(result, 'buy an album');
