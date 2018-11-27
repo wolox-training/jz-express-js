@@ -37,6 +37,7 @@ const config = {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD
     },
+    port: process.env.PORT,
     api: {
       bodySizeLimit: process.env.API_BODY_SIZE_LIMIT,
       parameterLimit: process.env.API_PARAMETER_LIMIT
