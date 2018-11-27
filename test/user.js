@@ -2,7 +2,7 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   server = require('./../app'),
   User = require('../app/models').User,
-  { createUser, login, userOne, anotherUser, anotherUserMore } = require('./util/users'),
+  { createUser, login, userOne, userWithBadPassword, anotherUser } = require('./util/users'),
   config = require('../config'),
   expect = chai.expect;
 
@@ -27,7 +27,7 @@ describe('users', () => {
       });
     });
     it('should fail creation of user because email domain is not valid', done => {
-      createUser(anotherUser).catch(err => {
+      createUser(userWithBadPassword).catch(err => {
         expect(err).have.status(400);
         expect(err.response).be.json;
         expect(err.response.body).have.property('message');
@@ -37,7 +37,7 @@ describe('users', () => {
       });
     });
     it('should fail creation of user because password is no correct', done => {
-      createUser(anotherUser).catch(err => {
+      createUser(userWithBadPassword).catch(err => {
         expect(err).have.status(400);
         expect(err.response).be.json;
         expect(err.response.body).have.property('message');
@@ -213,7 +213,7 @@ describe('users', () => {
             .request(server)
             .post('/admin/users')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-            .send(anotherUserMore)
+            .send(anotherUser)
             .then(async result => {
               expect(result).have.status(201);
 
@@ -245,7 +245,7 @@ describe('users', () => {
         roleUser: 'administrator'
       });
 
-      createUser(anotherUserMore).then(() => {
+      createUser(anotherUser).then(() => {
         admin.save().then(() => {
           login({
             email: 'dami@wolox.com',
@@ -255,7 +255,7 @@ describe('users', () => {
               .request(server)
               .post('/admin/users')
               .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-              .send(anotherUserMore)
+              .send(anotherUser)
               .then(async result => {
                 expect(result).have.status(201);
                 const users = await User.find({

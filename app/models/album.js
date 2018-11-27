@@ -4,8 +4,8 @@ const logger = require('../logger'),
   errors = require('../errors');
 
 module.exports = (sequelize, DataTypes) => {
-  const Album = sequelize.define(
-    'Album',
+  const AlbumUser = sequelize.define(
+    'AlbumUser',
     {
       albumId: { type: DataTypes.INTEGER, allowNull: false, field: 'album_id' },
       userId: {
@@ -31,12 +31,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Album.associate = models => {
-    Album.belongsTo(models.User);
+  AlbumUser.associate = models => {
+    AlbumUser.belongsTo(models.User);
   };
 
-  Album.createModel = album =>
-    Album.create(album).catch(err => {
+  AlbumUser.createModel = album =>
+    AlbumUser.create(album).catch(err => {
       logger.error(err);
       if (err.name === 'SequelizeUniqueConstraintError') {
         throw errors.albumOrderError('User already have this album');
@@ -44,13 +44,13 @@ module.exports = (sequelize, DataTypes) => {
       throw errors.databaseError(err.message);
     });
 
-  Album.getAlbumBy = param =>
-    Album.findAll({
+  AlbumUser.getAlbumBy = param =>
+    AlbumUser.findAll({
       where: param
     }).catch(err => {
       logger.error(err);
       throw errors.databaseError(err);
     });
 
-  return Album;
+  return AlbumUser;
 };
