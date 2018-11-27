@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  User.associate = models => {
+    User.hasMany(models.AlbumUser, { foreignKey: 'userId' });
+  };
+
   User.createUser = user => {
     user.password = bcrypt.hashSync(user.password, salt);
 

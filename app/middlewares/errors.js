@@ -9,6 +9,7 @@ const statusCodes = {
   [errors.SAVING_ERROR]: 400,
   [errors.SIGNIN_ERROR]: 400,
   [errors.ALBUMS_API_REDIRECTION]: 300,
+  [errors.ALBUM_ORDER_ERROR]: 400,
   [errors.ALBUMS_NOT_FOUND]: 404,
   [errors.ALBUMS_API_ERROR]: 503,
   [errors.AUTHORIZATE_ERROR]: 401,

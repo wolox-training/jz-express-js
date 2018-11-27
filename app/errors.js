@@ -26,3 +26,6 @@ exports.albumsNotFound = message => internalError(message, exports.ALBUMS_NOT_FO
 
 exports.ALBUMS_API_REDIRECTION = 'albums_api_redirection';
 exports.albumsApiRedirection = message => internalError(message, exports.ALBUMS_API_REDIRECTION);
+
+exports.ALBUM_ORDER_ERROR = 'album_order_error';
+exports.albumOrderError = message => internalError(message, exports.ALBUM_ORDER_ERROR);
