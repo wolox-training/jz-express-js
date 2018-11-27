@@ -8,7 +8,7 @@ const chai = require('chai'),
   { createUser, login, userOne } = require('./util/users'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
-  Album = require('../app/models').Album,
+  Album = require('../app/models').AlbumUser,
   expect = chai.expect;
 
 describe('albums', () => {

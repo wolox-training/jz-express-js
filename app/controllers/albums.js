@@ -3,7 +3,7 @@
 const { getResources } = require('../services/album'),
   { decoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User,
-  Album = require('../models').Album;
+  Album = require('../models').AlbumUser;
 
 const getUser = auth => {
   const user = decoder(auth);

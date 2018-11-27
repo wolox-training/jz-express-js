@@ -3,7 +3,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) =>
     queryInterface
-      .createTable('Album', {
+      .createTable('AlbumUser', {
         id: {
           type: Sequelize.INTEGER,
           autoIncrement: true,
@@ -27,9 +27,9 @@ module.exports = {
         updated_at: Sequelize.DATE
       })
       .then(() =>
-        queryInterface.addIndex('Album', ['user_id', 'album_id'], {
+        queryInterface.addIndex('AlbumUser', ['user_id', 'album_id'], {
           indicesType: 'UNIQUE'
         })
       ),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Album')
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('AlbumUser')
 };
