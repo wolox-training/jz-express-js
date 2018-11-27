@@ -36,3 +36,12 @@ exports.buyAlbum = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.listPurchasedAlbums = (req, res, next) =>
+  Album.getAlbumBy({
+    userId: req.params.user_id
+  })
+    .then(albumUser => {
+      res.status(200).send(albumUser);
+    })
+    .catch(next);
