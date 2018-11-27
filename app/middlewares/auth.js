@@ -41,7 +41,6 @@ exports.verifyAccess = async (req, res, next) => {
   const auth = req.headers[AUTHORIZATION];
 
   const user = await getUser(auth);
-
   if (parseInt(user.id) !== parseInt(req.params.user_id) && user.roleUser === roleUser.REGULAR)
     next(error.authorizationError('Only can access to your albums'));
   next();
