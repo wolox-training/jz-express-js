@@ -5,6 +5,7 @@ const chai = require('chai'),
   nock = require('nock'),
   server = require('./../app'),
   config = require('../config'),
+  User = require('../app/models').User,
   { createUser, login, userOne } = require('./util/users'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
@@ -213,6 +214,122 @@ describe('albums', () => {
           expect(err.response.body.internal_code).to.equal('authorization_error');
           done();
         });
+    });
+  });
+  describe('/users/:user_id/albums GET', () => {
+    it('should list all purchased albums without problems because are loged and is his id', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              chai
+                .request(server)
+                .get(`/users/1/albums`)
+                .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+                .then(result => {
+                  expect(result).have.status(200);
+                  dictum.chai(result, 'list all purchased albums');
+                  done();
+                });
+            });
+        });
+      });
+    });
+
+    it('should fail list all purchased albums because is requesting the albums from other user', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              chai
+                .request(server)
+                .get(`/users/2/albums`)
+                .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+                .catch(err => {
+                  expect(err).have.status(401);
+                  expect(err.response).be.json;
+                  expect(err.response.body).have.property('message');
+                  expect(err.response.body).have.property('internal_code');
+                  expect(err.response.body.internal_code).to.equal('authorization_error');
+                  done();
+                });
+            });
+        });
+      });
+    });
+
+    it('should list all purchased albums from other user because is an admin user', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              const admin = new User({
+                name: 'damarisTorres',
+                lastName: 'palacios',
+                email: 'dami@wolox.com',
+                password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
+                roleUser: 'administrator'
+              });
+              admin.save().then(() => {
+                login({
+                  email: 'dami@wolox.com',
+                  password: 'woloxwoloA152022'
+                }).then(response => {
+                  chai
+                    .request(server)
+                    .get(`/users/1/albums`)
+                    .set(
+                      config.common.session.header_name,
+                      response.headers[config.common.session.header_name]
+                    )
+                    .then(result => {
+                      expect(result).have.status(200);
+                      done();
+                    });
+                });
+              });
+            });
+        });
+      });
     });
   });
 });
