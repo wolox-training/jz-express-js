@@ -215,7 +215,7 @@ describe('albums', () => {
         });
     });
   });
-  describe('/users/:user_id/albums GET', () => {
+  describe('/users/:userId/albums GET', () => {
     it('should list all purchased albums without problems because are loged and is his id', done => {
       const [mockedAlbum] = albums;
 
@@ -239,6 +239,10 @@ describe('albums', () => {
                 .get(`/users/1/albums`)
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
                 .then(result => {
+                  expect(result.body[0]).have.property('userId');
+                  expect(result.body[0].userId).to.equal(1);
+                  expect(result.body[0]).have.property('albumId');
+                  expect(result.body[0].albumId).to.equal(1);
                   expect(result).have.status(200);
                   dictum.chai(result, 'list all purchased albums');
                   done();
@@ -313,10 +317,53 @@ describe('albums', () => {
                       response.headers[config.common.session.header_name]
                     )
                     .then(result => {
+                      expect(result.body[0]).have.property('userId');
+                      expect(result.body[0].userId).to.equal(1);
+                      expect(result.body[0]).have.property('albumId');
+                      expect(result.body[0].albumId).to.equal(1);
                       expect(result).have.status(200);
                       done();
                     });
                 });
+              });
+            });
+        });
+      });
+    });
+    it('should administrator sees his own list all purchased ', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      User.create(adminUser).then(() => {
+        login({
+          email: 'dami@wolox.com',
+          password: 'woloxwoloA152022'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              login({
+                email: 'dami@wolox.com',
+                password: 'woloxwoloA152022'
+              }).then(response => {
+                chai
+                  .request(server)
+                  .get(`/users/1/albums`)
+                  .set(config.common.session.header_name, response.headers[config.common.session.header_name])
+                  .then(result => {
+                    expect(result.body[0]).have.property('userId');
+                    expect(result.body[0].userId).to.equal(1);
+                    expect(result.body[0]).have.property('albumId');
+                    expect(result.body[0].albumId).to.equal(1);
+                    expect(result).have.status(200);
+                    done();
+                  });
               });
             });
         });
