@@ -17,6 +17,7 @@ exports.verifyToken = async (req, res, next) => {
 
   if (auth) {
     const user = await getUser(auth);
+    req.user = user;
     if (user) {
       next();
     } else {
@@ -31,17 +32,13 @@ exports.verifyPermission = async (req, res, next) => {
   const auth = req.headers[AUTHORIZATION];
 
   const user = await getUser(auth);
-
   user.roleUser === roleUser.REGULAR
     ? next(error.authorizationError('Is not  an Administrator user'))
     : next();
 };
 
 exports.verifyAccess = async (req, res, next) => {
-  const auth = req.headers[AUTHORIZATION];
-
-  const user = await getUser(auth);
-  if (parseInt(user.id) !== parseInt(req.params.user_id) && user.roleUser === roleUser.REGULAR)
-    next(error.authorizationError('Only can access to your albums'));
-  next();
+  parseInt(req.user.id) !== parseInt(req.params.userId) && req.user.roleUser === roleUser.REGULAR
+    ? next(error.authorizationError('Only can access to your albums'))
+    : next();
 };
