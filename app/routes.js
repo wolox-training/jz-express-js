@@ -12,7 +12,7 @@ exports.init = app => {
   app.post('/users/sessions', validatorMiddleware(signInCheckValidations), userController.signIn);
   app.get('/users', auth.verifyToken, userController.userList);
   app.get(
-    '/users/:user_id/albums',
+    '/users/:userId/albums',
     [auth.verifyToken, auth.verifyAccess],
     albumController.listPurchasedAlbums
   );
