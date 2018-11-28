@@ -6,7 +6,7 @@ const chai = require('chai'),
   server = require('./../app'),
   config = require('../config'),
   User = require('../app/models').User,
-  { createUser, login, userOne } = require('./util/users'),
+  { createUser, login, userOne, adminUser } = require('./util/users'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
   Album = require('../app/models').AlbumUser,
@@ -300,14 +300,7 @@ describe('albums', () => {
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .send()
             .then(() => {
-              const admin = new User({
-                name: 'damarisTorres',
-                lastName: 'palacios',
-                email: 'dami@wolox.com',
-                password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
-                roleUser: 'administrator'
-              });
-              admin.save().then(() => {
+              User.create(adminUser).then(() => {
                 login({
                   email: 'dami@wolox.com',
                   password: 'woloxwoloA152022'
