@@ -9,6 +9,7 @@ const chai = require('chai'),
   { createUser, login, userOne, adminUser } = require('./util/users'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
+  { photos } = require('./util/photosMocker'),
   Album = require('../app/models').AlbumUser,
   expect = chai.expect;
 
@@ -365,6 +366,108 @@ describe('albums', () => {
                     done();
                   });
               });
+            });
+        });
+      });
+    });
+  });
+  describe('/users/albums/:id/photos GET', () => {
+    it('should list all albums photos without problems because user purchased the album', done => {
+      const [mockedPhoto] = photos,
+        [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              nock(`${url}/1/photos`)
+                .get('')
+                .reply(200, mockedPhoto);
+
+              chai
+                .request(server)
+                .get(`/users/albums/1/photos`)
+                .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+                .then(async result => {
+                  expect(result).have.status(200);
+                  expect(result.body).to.be.a('object');
+                  expect(result.body.id).to.be.equal(1);
+                  dictum.chai(result, 'list all album photos from purchased albums by user');
+                  done();
+                });
+            });
+        });
+      });
+    });
+
+    it('should fail list album photos because the user do not have this album yet', done => {
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .get(`/users/albums/1/photos`)
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .catch(err => {
+              expect(err).have.status(404);
+              expect(err.response).be.json;
+              expect(err.response.body).have.property('message');
+              expect(err.response.body).have.property('internal_code');
+              expect(err.response.body.internal_code).to.equal('albums_not_found');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should fail list album photos because the service is fail', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send({
+              id: res.body.id
+            })
+            .then(() => {
+              nock(`${url}/1/photos`)
+                .get('')
+                .reply(503);
+
+              chai
+                .request(server)
+                .get(`/users/albums/1/photos`)
+                .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+                .catch(err => {
+                  expect(err).have.status(503);
+                  expect(err.response.body).have.property('message');
+                  expect(err.response.body).have.property('internal_code');
+                  expect(err.response.body.internal_code).to.equal('albums_api_error');
+                  done();
+                });
             });
         });
       });
