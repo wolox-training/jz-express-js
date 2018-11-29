@@ -38,24 +38,33 @@ exports.buyAlbum = async (req, res, next) => {
   }
 };
 
-exports.listPurchasedAlbums = (req, res, next) =>
-  Album.getAlbumBy({
-    userId: req.params.userId
-  })
-    .then(albumUser => {
-      res.status(200).send(albumUser);
-    })
-    .catch(next);
-
 exports.listPhotosAlbum = async (req, res, next) => {
   try {
     const albums = await Album.getAlbumBy({
       albumId: req.params.id,
       userId: req.user.id
     });
-    if (!albums.length) throw error.albumsNotFound('You have not bought this album yet');
-    const photos = await getResources(`/albums/${albums[0].albumId}/photos`);
+    if (!albums) throw error.albumsNotFound('You have not bought this album yet');
+    const photos = await getResources(`/albums/${albums.albumId}/photos`);
     res.status(200).send(photos);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.listPurchasedAlbums = async (req, res, next) => {
+  try {
+    const albumUser = await Album.getAllAlbumBy({
+      userId: req.params.userId
+    });
+
+    const promises = albumUser.map(async x => {
+      const album = await getResources(`/albums/${x.albumId}`);
+      return album;
+    });
+
+    const results = await Promise.all(promises);
+    res.status(200).send(results);
   } catch (err) {
     next(err);
   }

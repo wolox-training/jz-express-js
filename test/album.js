@@ -221,6 +221,7 @@ describe('albums', () => {
       const [mockedAlbum] = albums;
 
       nock(`${url}/1`)
+        .persist()
         .get('')
         .reply(200, mockedAlbum);
 
@@ -240,10 +241,10 @@ describe('albums', () => {
                 .get(`/users/1/albums`)
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
                 .then(result => {
-                  expect(result.body[0]).have.property('userId');
-                  expect(result.body[0].userId).to.equal(1);
-                  expect(result.body[0]).have.property('albumId');
-                  expect(result.body[0].albumId).to.equal(1);
+                  expect(result.body[0]).have.property('id');
+                  expect(result.body[0].id).to.equal(1);
+                  expect(result.body[0]).have.property('title');
+                  expect(result.body[0].title).to.equal('quidem molestiae enim');
                   expect(result).have.status(200);
                   dictum.chai(result, 'list all purchased albums');
                   done();
@@ -257,6 +258,7 @@ describe('albums', () => {
       const [mockedAlbum] = albums;
 
       nock(`${url}/1`)
+        .persist()
         .get('')
         .reply(200, mockedAlbum);
 
@@ -291,6 +293,7 @@ describe('albums', () => {
       const [mockedAlbum] = albums;
 
       nock(`${url}/1`)
+        .persist()
         .get('')
         .reply(200, mockedAlbum);
 
@@ -318,10 +321,10 @@ describe('albums', () => {
                       response.headers[config.common.session.header_name]
                     )
                     .then(result => {
-                      expect(result.body[0]).have.property('userId');
-                      expect(result.body[0].userId).to.equal(1);
-                      expect(result.body[0]).have.property('albumId');
-                      expect(result.body[0].albumId).to.equal(1);
+                      expect(result.body[0]).have.property('id');
+                      expect(result.body[0].id).to.equal(1);
+                      expect(result.body[0]).have.property('title');
+                      expect(result.body[0].title).to.equal('quidem molestiae enim');
                       expect(result).have.status(200);
                       done();
                     });
@@ -335,6 +338,7 @@ describe('albums', () => {
       const [mockedAlbum] = albums;
 
       nock(`${url}/1`)
+        .persist()
         .get('')
         .reply(200, mockedAlbum);
 
@@ -358,10 +362,10 @@ describe('albums', () => {
                   .get(`/users/1/albums`)
                   .set(config.common.session.header_name, response.headers[config.common.session.header_name])
                   .then(result => {
-                    expect(result.body[0]).have.property('userId');
-                    expect(result.body[0].userId).to.equal(1);
-                    expect(result.body[0]).have.property('albumId');
-                    expect(result.body[0].albumId).to.equal(1);
+                    expect(result.body[0]).have.property('id');
+                    expect(result.body[0].id).to.equal(1);
+                    expect(result.body[0]).have.property('title');
+                    expect(result.body[0].title).to.equal('quidem molestiae enim');
                     expect(result).have.status(200);
                     done();
                   });
