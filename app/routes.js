@@ -11,6 +11,7 @@ exports.init = app => {
   app.post('/users', validatorMiddleware(signUpCheckValidations), userController.userCreate);
   app.post('/users/sessions', validatorMiddleware(signInCheckValidations), userController.signIn);
   app.get('/users', auth.verifyToken, userController.userList);
+  app.get('/users/albums/:id/photos', auth.verifyToken, albumController.listPhotosAlbum);
   app.get(
     '/users/:userId/albums',
     [auth.verifyToken, auth.verifyAccess],
