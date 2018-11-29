@@ -401,7 +401,6 @@ describe('albums', () => {
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
                 .then(async result => {
                   expect(result).have.status(200);
-                  expect(result.body).to.be.a('object');
                   expect(result.body.id).to.be.equal(1);
                   dictum.chai(result, 'list all album photos from purchased albums by user');
                   done();
@@ -423,7 +422,6 @@ describe('albums', () => {
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .catch(err => {
               expect(err).have.status(404);
-              expect(err.response).be.json;
               expect(err.response.body).have.property('message');
               expect(err.response.body).have.property('internal_code');
               expect(err.response.body.internal_code).to.equal('albums_not_found');
@@ -449,9 +447,7 @@ describe('albums', () => {
             .request(server)
             .post('/albums/1')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-            .send({
-              id: res.body.id
-            })
+            .send()
             .then(() => {
               nock(`${url}/1/photos`)
                 .get('')
