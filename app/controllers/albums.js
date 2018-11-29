@@ -49,7 +49,6 @@ exports.listPurchasedAlbums = async (req, res, next) => {
     });
 
     const results = await Promise.all(promises);
-    console.log(`AQUI ESTAN LOS ALBUMS QUE SE VAN A ENVIAR ${JSON.stringify(results)}`);
     res.status(200).send(results);
   } catch (err) {
     next(err);
