@@ -40,12 +40,12 @@ exports.buyAlbum = async (req, res, next) => {
 
 exports.listPhotosAlbum = async (req, res, next) => {
   try {
-    const albums = await Album.getAlbumBy({
+    const album = await Album.getAlbumBy({
       albumId: req.params.id,
       userId: req.user.id
     });
-    if (!albums) throw error.albumsNotFound('You have not bought this album yet');
-    const photos = await getResources(`/albums/${albums.albumId}/photos`);
+    if (!album) throw error.albumsNotFound('You have not bought this album yet');
+    const photos = await getResources(`/albums/${album.albumId}/photos`);
     res.status(200).send(photos);
   } catch (err) {
     next(err);
