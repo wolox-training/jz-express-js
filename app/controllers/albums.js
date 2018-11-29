@@ -42,7 +42,7 @@ exports.listPurchasedAlbums = async (req, res, next) => {
     const albumUser = await Album.getAllAlbumBy({
       userId: req.params.userId
     });
-    console.log(`Si LLEGO HASTA AQUI `);
+
     const promises = albumUser.map(async x => {
       const album = await getResources(`/albums/${x.albumId}`);
       return album;
