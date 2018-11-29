@@ -50,7 +50,8 @@ exports.listPurchasedAlbums = (req, res, next) =>
 exports.listPhotosAlbum = async (req, res, next) => {
   try {
     const albums = await Album.getAlbumBy({
-      albumId: req.params.id
+      albumId: req.params.id,
+      userId: req.user.id
     });
     if (!albums.length) throw error.albumsNotFound('You have not bought this album yet');
     const photos = await getResources(`/albums/${albums[0].albumId}/photos`);
