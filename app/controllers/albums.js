@@ -3,6 +3,7 @@
 const { getResources } = require('../services/album'),
   { decoder, AUTHORIZATION } = require('../services/session'),
   User = require('../models').User,
+  error = require('../errors'),
   Album = require('../models').AlbumUser;
 
 const getUser = auth => {
@@ -45,3 +46,16 @@ exports.listPurchasedAlbums = (req, res, next) =>
       res.status(200).send(albumUser);
     })
     .catch(next);
+
+exports.listPhotosAlbum = async (req, res, next) => {
+  try {
+    const albums = await Album.getAlbumBy({
+      albumId: req.params.id
+    });
+    if (!albums.length) throw error.albumsNotFound('You have not bought this album yet');
+    const photos = await getResources(`/albums/${albums[0].albumId}/photos`);
+    res.status(200).send(photos);
+  } catch (err) {
+    next(err);
+  }
+};
