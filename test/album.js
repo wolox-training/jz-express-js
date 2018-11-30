@@ -66,6 +66,23 @@ describe('albums', () => {
       });
     });
 
+    it('should fail list albums because token is venced', done => {
+      chai
+        .request(server)
+        .get('/albums')
+        .set(
+          config.common.session.header_name,
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRhbWFyaXNqdWxpb0B3b2xveC5teCIsImlhdCI6MTU0MzU0NzYzNiwiZXhwIjoxNTQzNTQ3NjM3fQ.TO7h6WJetwIW_QKVbp2GBiXwyjqHL9p0S5rth-ap2H4'
+        )
+        .catch(err => {
+          expect(err).have.status(401);
+          expect(err.response.body).have.property('message');
+          expect(err.response.body).have.property('internal_code');
+          expect(err.response.body.internal_code).to.equal('authorization_error');
+          done();
+        });
+    });
+
     it('should fail list albums because token is no sent or the  user is not logged', done => {
       chai
         .request(server)

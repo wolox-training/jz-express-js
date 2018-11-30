@@ -8,7 +8,7 @@ exports.encoder = payload =>
       email: payload.email
     },
     secret,
-    { expiresIn: 1 * 1 }
+    { expiresIn: '1h' }
   );
 
 exports.AUTHORIZATION = config.common.session.header_name;
