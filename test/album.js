@@ -66,7 +66,7 @@ describe('albums', () => {
       });
     });
 
-    it('should fail list albums because token is venced', done => {
+    it('should fail list albums because token is expired', done => {
       chai
         .request(server)
         .get('/albums')
