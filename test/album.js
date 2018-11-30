@@ -477,6 +477,68 @@ describe('albums', () => {
       });
     });
 
+    it('should fail list album photos because the user admin do not have this album yet', done => {
+      User.create(adminUser).then(() => {
+        login({
+          email: 'dami@wolox.com',
+          password: 'woloxwoloA152022'
+        }).then(res => {
+          chai
+            .request(server)
+            .get(`/users/albums/1/photos`)
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .catch(err => {
+              expect(err).have.status(404);
+              expect(err.response.body).have.property('message');
+              expect(err.response.body).have.property('internal_code');
+              expect(err.response.body.internal_code).to.equal('albums_not_found');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should fail list album photos because the albums were not purchased by the administrator user', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              User.create(adminUser).then(() => {
+                login({
+                  email: 'dami@wolox.com',
+                  password: 'woloxwoloA152022'
+                }).then(res2 => {
+                  chai
+                    .request(server)
+                    .get(`/users/albums/1/photos`)
+                    .set(config.common.session.header_name, res2.headers[config.common.session.header_name])
+                    .catch(err => {
+                      expect(err).have.status(404);
+                      expect(err.response.body).have.property('message');
+                      expect(err.response.body).have.property('internal_code');
+                      expect(err.response.body.internal_code).to.equal('albums_not_found');
+                      done();
+                    });
+                });
+              });
+            });
+        });
+      });
+    });
+
     it('should fail list album photos because the service is fail', done => {
       const [mockedAlbum] = albums;
 
