@@ -16,12 +16,16 @@ exports.verifyToken = async (req, res, next) => {
   const auth = req.headers[AUTHORIZATION];
 
   if (auth) {
-    const user = await getUser(auth);
-    req.user = user;
-    if (user) {
-      next();
-    } else {
-      next(error.authorizationError('Token is invalid!'));
+    try {
+      const user = await getUser(auth);
+      req.user = user;
+      if (user) {
+        next();
+      } else {
+        next(error.authorizationError('Token is invalid!'));
+      }
+    } catch (err) {
+      next(error.authorizationError('Token is expired!'));
     }
   } else {
     next(error.authorizationError('Token is required!'));
