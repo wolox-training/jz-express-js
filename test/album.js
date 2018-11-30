@@ -376,8 +376,8 @@ describe('albums', () => {
     });
   });
   describe('/users/albums/:id/photos GET', () => {
-    it('should list all albums photos without problems because user purchased the album', done => {
-      const [mockedPhoto] = photos,
+    it('should list all album photos without problems because user purchased the album', done => {
+      const mockedPhotos = photos,
         [mockedAlbum] = albums;
 
       nock(`${url}/1`)
@@ -397,7 +397,7 @@ describe('albums', () => {
             .then(() => {
               nock(`${url}/1/photos`)
                 .get('')
-                .reply(200, mockedPhoto);
+                .reply(200, mockedPhotos);
 
               chai
                 .request(server)
@@ -405,7 +405,49 @@ describe('albums', () => {
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
                 .then(async result => {
                   expect(result).have.status(200);
-                  expect(result.body.id).to.be.equal(1);
+                  expect(result.body[2].albumId).to.be.equal(1);
+                  expect(result.body[2].id).to.be.equal(3);
+                  expect(result.body[2].title).to.be.equal('officia porro iure quia iusto qui ipsa ut modi');
+                  dictum.chai(result, 'list all album photos from purchased albums by user');
+                  done();
+                });
+            });
+        });
+      });
+    });
+
+    it('should list all album photos without problems because user purchased the album when user is admin', done => {
+      const mockedPhotos = photos,
+        [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      User.create(adminUser).then(() => {
+        login({
+          email: 'dami@wolox.com',
+          password: 'woloxwoloA152022'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              nock(`${url}/1/photos`)
+                .get('')
+                .reply(200, mockedPhotos);
+
+              chai
+                .request(server)
+                .get(`/users/albums/1/photos`)
+                .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+                .then(result => {
+                  expect(result).have.status(200);
+                  expect(result.body[2].albumId).to.be.equal(1);
+                  expect(result.body[2].id).to.be.equal(3);
+                  expect(result.body[2].title).to.be.equal('officia porro iure quia iusto qui ipsa ut modi');
                   dictum.chai(result, 'list all album photos from purchased albums by user');
                   done();
                 });
