@@ -30,8 +30,6 @@ describe('albums', () => {
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .then(result => {
               expect(result).have.status(200);
-              expect(result).be.json;
-              expect(result).to.be.a('object');
               expect(result.body.length).to.equal(albums.length);
               expect(result.body[3]).have.property('userId');
               expect(result.body[3].userId).to.be.equal(1);
@@ -46,7 +44,7 @@ describe('albums', () => {
     it('should fail list albums because the service fail', done => {
       nock(url)
         .get('')
-        .reply(404);
+        .reply(503);
 
       createUser(userOne).then(() => {
         login({
@@ -58,7 +56,10 @@ describe('albums', () => {
             .get('/albums')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .catch(err => {
-              expect(err).have.status(404);
+              expect(err).have.status(503);
+              expect(err.response.body).have.property('message');
+              expect(err.response.body).have.property('internal_code');
+              expect(err.response.body.internal_code).to.equal('albums_api_error');
               done();
             });
         });
@@ -71,7 +72,6 @@ describe('albums', () => {
         .get('/albums')
         .catch(err => {
           expect(err).have.status(401);
-          expect(err.response).be.json;
           expect(err.response.body).have.property('message');
           expect(err.response.body).have.property('internal_code');
           expect(err.response.body.internal_code).to.equal('authorization_error');
@@ -96,9 +96,7 @@ describe('albums', () => {
             .request(server)
             .post('/albums/1')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-            .send({
-              id: res.body.id
-            })
+            .send()
             .then(async result => {
               const album = await Album.find({
                 where: {
@@ -144,7 +142,6 @@ describe('albums', () => {
                 .send()
                 .catch(err => {
                   expect(err).have.status(400);
-                  expect(err.response).be.json;
                   expect(err.response.body).have.property('message');
                   expect(err.response.body).have.property('internal_code');
                   expect(err.response.body.internal_code).to.equal('album_order_error');
@@ -208,7 +205,6 @@ describe('albums', () => {
         .post('/albums/1')
         .catch(err => {
           expect(err).have.status(401);
-          expect(err.response).be.json;
           expect(err.response.body).have.property('message');
           expect(err.response.body).have.property('internal_code');
           expect(err.response.body.internal_code).to.equal('authorization_error');
