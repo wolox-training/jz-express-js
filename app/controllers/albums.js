@@ -58,10 +58,7 @@ exports.listPurchasedAlbums = async (req, res, next) => {
       userId: req.params.userId
     });
 
-    const promisesAlbumPhotos = albumUser.map(async album => {
-      const albumPhotos = await getResources(`/albums/${album.albumId}`);
-      return albumPhotos;
-    });
+    const promisesAlbumPhotos = albumUser.map(album => getResources(`/albums/${album.albumId}`));
 
     const albumPhotos = await Promise.all(promisesAlbumPhotos);
     res.status(200).send(albumPhotos);
