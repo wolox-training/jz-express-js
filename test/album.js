@@ -7,6 +7,7 @@ const chai = require('chai'),
   config = require('../config'),
   User = require('../app/models').User,
   { createUser, login, userOne, adminUser } = require('./util/users'),
+  { queryAlbums } = require('./util/albums'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
   { photos } = require('./util/photosMocker'),
@@ -28,7 +29,7 @@ describe('albums', () => {
             .request(server)
             .post('/graph-albums')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-            .send({ query: '{\n  albums {\n    title\n    id\n  }\n}\n', variables: null })
+            .send(queryAlbums)
             .then(result => {
               expect(result).have.status(200);
               expect(result.body.data.albums.length).to.equal(albums.length);
