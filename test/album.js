@@ -15,7 +15,7 @@ const chai = require('chai'),
 
 describe('albums', () => {
   describe('/albums/ GET', () => {
-    it('should list albums without problems because are loged', done => {
+    it('should list albums with graphql without problems because are loged', done => {
       nock(url)
         .get('')
         .reply(200, albums);
@@ -26,7 +26,7 @@ describe('albums', () => {
         }).then(res => {
           chai
             .request(server)
-            .post('/graphalbums')
+            .post('/graph-albums')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .send({ query: '{\n  albums {\n    title\n    id\n  }\n}\n', variables: null })
             .then(result => {
@@ -35,6 +35,32 @@ describe('albums', () => {
               expect(result.body.data.albums[3].title).to.be.equal(
                 'non esse culpa molestiae omnis sed optio'
               );
+              dictum.chai(result, 'get albums');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should list albums  without problems because are loged', done => {
+      nock(url)
+        .get('')
+        .reply(200, albums);
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .get('/albums')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .then(result => {
+              expect(result).have.status(200);
+              expect(result.body.length).to.equal(albums.length);
+              expect(result.body[3]).have.property('userId');
+              expect(result.body[3].userId).to.be.equal(1);
+              expect(result.body[3].title).to.be.equal('non esse culpa molestiae omnis sed optio');
               dictum.chai(result, 'get albums');
               done();
             });
