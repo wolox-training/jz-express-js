@@ -13,7 +13,12 @@ const getUser = auth => {
   });
 };
 
-exports.albumList = (req, res, next) => getResources('/albums').catch(next);
+exports.albumList = (req, res, next) =>
+  getResources('/albums')
+    .then(albums => {
+      res.status(200).send(albums);
+    })
+    .catch(next);
 
 exports.buyAlbum = async (req, res, next) => {
   try {
