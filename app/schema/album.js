@@ -1,6 +1,6 @@
 const graphql = require('graphql'),
   { buildSchema } = graphql,
-  albumController = require('../controllers/albums');
+  { getResources } = require('../services/album');
 
 exports.schema = buildSchema(`
   type album {
@@ -13,5 +13,5 @@ exports.schema = buildSchema(`
 `);
 
 exports.root = {
-  albums: (args, req) => albumController.albumList(req)
+  albums: (args, req) => getResources('/albums')
 };
