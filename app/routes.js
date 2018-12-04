@@ -27,7 +27,7 @@ exports.init = app => {
   app.get('/albums', auth.verifyToken, albumController.albumList);
   app.post('/albums/:id', auth.verifyToken, albumController.buyAlbum);
   app.use(
-    '/graphalbums',
+    '/graph-albums',
     auth.verifyToken,
     graphqlHTTP({ schema: albumSchema.schema, rootValue: albumSchema.root, graphiql: true })
   );
