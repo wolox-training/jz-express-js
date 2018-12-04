@@ -26,14 +26,15 @@ describe('albums', () => {
         }).then(res => {
           chai
             .request(server)
-            .get('/albums')
+            .post('/graphalbums')
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send({ query: '{\n  albums {\n    title\n    id\n  }\n}\n', variables: null })
             .then(result => {
               expect(result).have.status(200);
-              expect(result.body.length).to.equal(albums.length);
-              expect(result.body[3]).have.property('userId');
-              expect(result.body[3].userId).to.be.equal(1);
-              expect(result.body[3].title).to.be.equal('non esse culpa molestiae omnis sed optio');
+              expect(result.body.data.albums.length).to.equal(albums.length);
+              expect(result.body.data.albums[3].title).to.be.equal(
+                'non esse culpa molestiae omnis sed optio'
+              );
               dictum.chai(result, 'get albums');
               done();
             });
