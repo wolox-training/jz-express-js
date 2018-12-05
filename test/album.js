@@ -107,6 +107,42 @@ describe('albums', () => {
         });
     });
   });
+
+  describe('getting the list of all albums, loged In, with graphql ', () => {
+    it('should delete with graphql album purchased without problems because user is logged', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      User.create(adminUser).then(() => {
+        login({
+          email: 'dami@wolox.com',
+          password: 'woloxwoloA152022'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              const query = `mutation {
+                delete(id:1)
+              }`;
+              chai
+                .request(server)
+                .post('/graph-albums')
+                .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+                .send(query)
+                .then(result => {
+                  done();
+                });
+            });
+        });
+      });
+    });
+  });
   describe('/albums/:id POST', () => {
     it('should order an albums without problems because are loged', done => {
       const [mockedAlbum] = albums;
