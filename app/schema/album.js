@@ -1,7 +1,7 @@
 const graphql = require('graphql'),
   { buildSchema } = graphql,
   Album = require('../models').AlbumUser,
-  { getResources } = require('../models');
+  { getResources } = require('../services/album');
 
 exports.schema = buildSchema(`
   type album {
@@ -19,7 +19,6 @@ exports.schema = buildSchema(`
 exports.root = {
   albums: () => getResources('/albums'),
   delete: (args, req) => {
-    console.log(`AQUI ESTOY EN EL GRAPHQL ${JSON.stringify(req.params.userId)}`);
-    Album.deteleAlbumPurchased();
+    return Album.deteleAlbumPurchased({ userId: req.user.id, albumId: args.id });
   }
 };
