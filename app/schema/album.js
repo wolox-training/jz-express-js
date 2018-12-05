@@ -13,5 +13,5 @@ exports.schema = buildSchema(`
 `);
 
 exports.root = {
-  albums: (args, req) => getResources('/albums')
+  albums: () => getResources('/albums')
 };
