@@ -18,7 +18,8 @@ exports.schema = buildSchema(`
 
 exports.root = {
   albums: () => getResources('/albums'),
-  delete: (args, req) => {
-    return Album.deteleAlbumPurchased({ userId: req.user.id, albumId: args.id });
+  delete: async (args, req) => {
+    const deleteAlbumPurchased = await Album.deteleAlbumPurchased({ userId: req.user.id, albumId: args.id });
+    return deleteAlbumPurchased === 1 ? 'AlbumPurchased is deleted' : 'you have not bought this album';
   }
 };
