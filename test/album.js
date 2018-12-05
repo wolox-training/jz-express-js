@@ -7,7 +7,7 @@ const chai = require('chai'),
   config = require('../config'),
   User = require('../app/models').User,
   { createUser, login, userOne, adminUser } = require('./util/users'),
-  { queryAlbums } = require('./util/albums'),
+  { queryAlbums, mutationAlbum, otherMutationAlbum } = require('./util/albums'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
   { photos } = require('./util/photosMocker'),
@@ -108,8 +108,8 @@ describe('albums', () => {
     });
   });
 
-  describe('getting the list of all albums, loged In, with graphql ', () => {
-    it('should delete with graphql album purchased without problems because user is logged', done => {
+  describe('Delete album with graphql ', () => {
+    it('should deleted with graphql the album purchased without problems because user is logged and and he has the albums', done => {
       const [mockedAlbum] = albums;
 
       nock(`${url}/1`)
@@ -127,15 +127,61 @@ describe('albums', () => {
             .set(config.common.session.header_name, res.headers[config.common.session.header_name])
             .send()
             .then(() => {
-              const query = `mutation {
-                delete(id:1)
-              }`;
               chai
                 .request(server)
                 .post('/graph-albums')
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-                .send(query)
-                .then(result => {
+                .send(mutationAlbum)
+                .then(async result => {
+                  const album = await Album.find({
+                    where: {
+                      albumId: 1,
+                      userId: 1
+                    }
+                  });
+                  expect(result).have.status(200);
+                  expect(result.body.data.delete).to.equal('AlbumPurchased is deleted');
+                  expect(album).to.be.equal(null);
+                  done();
+                });
+            });
+        });
+      });
+    });
+
+    it('should fail delete with graphql the album because user does not have this album', done => {
+      const [mockedAlbum] = albums;
+
+      nock(`${url}/1`)
+        .get('')
+        .reply(200, mockedAlbum);
+
+      User.create(adminUser).then(() => {
+        login({
+          email: 'dami@wolox.com',
+          password: 'woloxwoloA152022'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/albums/1')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send()
+            .then(() => {
+              chai
+                .request(server)
+                .post('/graph-albums')
+                .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+                .send(otherMutationAlbum)
+                .then(async result => {
+                  const album = await Album.find({
+                    where: {
+                      albumId: 1,
+                      userId: 1
+                    }
+                  });
+                  expect(result).have.status(200);
+                  expect(result.body.data.delete).to.equal('you have not bought this album');
+                  expect(album.albumId).to.be.equal(1);
                   done();
                 });
             });
