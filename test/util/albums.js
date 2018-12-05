@@ -1,3 +1,3 @@
 'use strict';
 
-exports.queryAlbums = { query: '{\n  albums {\n    title\n    id\n  }\n}\n', variables: null };
+exports.queryAlbums = { query: `{  albums { title id } }`, variables: null };
