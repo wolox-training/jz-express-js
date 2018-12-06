@@ -2,7 +2,7 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   server = require('./../app'),
   User = require('../app/models').User,
-  { createUser, login, userOne, userWithBadPassword, anotherUser } = require('./util/users'),
+  { createUser, login, userOne, userWithBadPassword, anotherUser, adminUser } = require('./util/users'),
   config = require('../config'),
   expect = chai.expect;
 
@@ -196,15 +196,7 @@ describe('users', () => {
     });
 
     it('should signup an admin user without problems because the requester is admin', done => {
-      const admin = new User({
-        name: 'damarisTorres',
-        lastName: 'palacios',
-        email: 'dami@wolox.com',
-        password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
-        roleUser: 'administrator'
-      });
-
-      admin.save().then(() => {
+      User.create(adminUser).then(() => {
         login({
           email: 'dami@wolox.com',
           password: 'woloxwoloA152022'
@@ -237,16 +229,8 @@ describe('users', () => {
     });
 
     it('should update an regular user without problems because the requester is admin', done => {
-      const admin = new User({
-        name: 'damarisTorres',
-        lastName: 'palacios',
-        email: 'dami@wolox.com',
-        password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
-        roleUser: 'administrator'
-      });
-
       createUser(anotherUser).then(() => {
-        admin.save().then(() => {
+        User.create(adminUser).then(() => {
           login({
             email: 'dami@wolox.com',
             password: 'woloxwoloA152022'

@@ -24,6 +24,14 @@ exports.anotherUser = {
   password: 'woloxwoloA1520'
 };
 
+exports.adminUser = {
+  name: 'damarisTorres',
+  lastName: 'palacios',
+  email: 'dami@wolox.com',
+  password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
+  roleUser: 'administrator'
+};
+
 exports.createUser = user =>
   chai
     .request(server)
