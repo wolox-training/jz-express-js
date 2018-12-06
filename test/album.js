@@ -140,7 +140,7 @@ describe('albums', () => {
                     }
                   });
                   expect(result).have.status(200);
-                  expect(result.body.data.delete).to.equal('AlbumPurchased is deleted');
+                  expect(result.body.data.deleteAlbum).to.equal('Album  is deleted');
                   expect(album).to.be.equal(null);
                   done();
                 });
@@ -180,7 +180,7 @@ describe('albums', () => {
                     }
                   });
                   expect(result).have.status(200);
-                  expect(result.body.data.delete).to.equal('you have not bought this album');
+                  expect(result.body.data.deleteAlbum).to.equal('Album not found');
                   expect(album.albumId).to.be.equal(1);
                   done();
                 });
