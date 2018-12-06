@@ -7,6 +7,7 @@ const chai = require('chai'),
   config = require('../config'),
   User = require('../app/models').User,
   { createUser, login, userOne, adminUser } = require('./util/users'),
+  { queryAlbums } = require('./util/albums'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
   { photos } = require('./util/photosMocker'),
@@ -15,7 +16,34 @@ const chai = require('chai'),
 
 describe('albums', () => {
   describe('/albums/ GET', () => {
-    it('should list albums without problems because are loged', done => {
+    it('should list albums with graphql without problems because are loged', done => {
+      nock(url)
+        .get('')
+        .reply(200, albums);
+      createUser(userOne).then(() => {
+        login({
+          email: 'sarahi12hg@wolox.com',
+          password: 'woloxwoloA1520'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/graph-albums')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send(queryAlbums)
+            .then(result => {
+              expect(result).have.status(200);
+              expect(result.body.data.albums.length).to.equal(albums.length);
+              expect(result.body.data.albums[3].title).to.be.equal(
+                'non esse culpa molestiae omnis sed optio'
+              );
+              dictum.chai(result, 'get albums');
+              done();
+            });
+        });
+      });
+    });
+
+    it('should list albums  without problems because are loged', done => {
       nock(url)
         .get('')
         .reply(200, albums);
