@@ -12,14 +12,14 @@ exports.schema = buildSchema(`
       albums: [album]
   },
   type Mutation{
-    delete(id:Int): String
+    deleteAlbum(id:Int): String
     }	  
 `);
 
 exports.root = {
   albums: () => getResources('/albums'),
-  delete: async (args, req) => {
+  deleteAlbum: async (args, req) => {
     const deleteAlbumPurchased = await Album.deteleAlbumPurchased({ userId: req.user.id, albumId: args.id });
-    return deleteAlbumPurchased === 1 ? 'AlbumPurchased is deleted' : 'you have not bought this album';
+    return deleteAlbumPurchased === 1 ? 'Album  is deleted' : 'Album not found';
   }
 };
