@@ -18,3 +18,16 @@ exports.getResources = source =>
 
       throw errors.albumsApiError('service not available');
     });
+
+exports.postResources = (source, param) =>
+  axios
+    .post(`${url}${source}`, param)
+    .then(res => res.data)
+    .catch(err => {
+      logger.error(err);
+      if (err.response.status === 300)
+        throw errors.albumsApiRedirection('client must take additional action to complete the request');
+      if (err.response.status === 404) throw errors.albumsNotFound('Error 404 No found');
+
+      throw errors.albumsApiError('service not available');
+    });
