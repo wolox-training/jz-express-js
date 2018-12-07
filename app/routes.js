@@ -1,6 +1,7 @@
 const graphqlHTTP = require('express-graphql'),
   albumSchema = require('./schema/album'),
   auth = require('./middlewares/auth'),
+  { getErrorCode } = require('./schema/errors'),
   userController = require('./controllers/users'),
   albumController = require('./controllers/albums'),
   {
@@ -26,9 +27,18 @@ exports.init = app => {
   );
   app.get('/albums', auth.verifyToken, albumController.albumList);
   app.post('/albums/:id', auth.verifyToken, albumController.buyAlbum);
-  app.use(
-    '/graph-albums',
-    auth.verifyToken,
-    graphqlHTTP({ schema: albumSchema.schema, rootValue: albumSchema.root, graphiql: true })
-  );
+  app.use('/graph-albums', auth.verifyToken, (req, res) => {
+    graphqlHTTP({
+      schema: albumSchema.schema,
+      rootValue: albumSchema.root,
+      formatError: err => {
+        const error = getErrorCode(err.message);
+        return {
+          message: error.message,
+          statusCode: error.statusCode
+        };
+      },
+      graphiql: true
+    })(req, res);
+  });
 };
