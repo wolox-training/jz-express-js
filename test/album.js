@@ -179,6 +179,7 @@ describe('albums', () => {
                       userId: 1
                     }
                   });
+                  console.log(`AQUIII ESTA EL ERROR ${JSON.stringify(result.body)}`);
                   expect(result).have.status(200);
                   expect(result.body.data.deleteAlbum).to.equal('Album not found');
                   expect(album.albumId).to.be.equal(1);
