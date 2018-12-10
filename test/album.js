@@ -7,7 +7,13 @@ const chai = require('chai'),
   config = require('../config'),
   User = require('../app/models').User,
   { createUser, login, userOne, adminUser } = require('./util/users'),
-  { queryAlbums, mutationAlbum, otherMutationAlbum } = require('./util/albums'),
+  {
+    queryAlbums,
+    mutationAlbum,
+    otherMutationAlbum,
+    albumCreateApi,
+    mutationCreateAlbum
+  } = require('./util/albums'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
   { photos } = require('./util/photosMocker'),
@@ -184,6 +190,31 @@ describe('albums', () => {
                   expect(album.albumId).to.be.equal(1);
                   done();
                 });
+            });
+        });
+      });
+    });
+  });
+
+  describe('create Album with graphql', () => {
+    it('should create album with graphql without problems because user is logged ', done => {
+      nock(`${url}/albums`)
+        .post('')
+        .reply(200, albumCreateApi);
+
+      User.create(adminUser).then(() => {
+        login({
+          email: 'dami@wolox.com',
+          password: 'woloxwoloA152022'
+        }).then(res => {
+          chai
+            .request(server)
+            .post('/graph-albums')
+            .set(config.common.session.header_name, res.headers[config.common.session.header_name])
+            .send(mutationCreateAlbum)
+            .then(result => {
+              expect(result).have.status(200);
+              done();
             });
         });
       });
