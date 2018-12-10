@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       throw errors.databaseError(err.message);
     });
 
-  AlbumUser.deteleAlbumPurchased = param =>
+  AlbumUser.deleteAlbumPurchased = param =>
     AlbumUser.destroy({
       where: param
     }).catch(err => {
