@@ -6,7 +6,7 @@ exports.errorName = {
 
 exports.errorType = {
   ALBUM_NOT_FOUND: {
-    message: 'Album no found',
+    message: 'Album not found',
     statusCode: 404
   }
 };

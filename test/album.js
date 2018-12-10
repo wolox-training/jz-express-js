@@ -181,7 +181,7 @@ describe('albums', () => {
                   });
                   console.log(`AQUIII ESTA EL ERROR ${JSON.stringify(result.body)}`);
                   expect(result).have.status(200);
-                  expect(result.body.errors[0].message).to.equal('Album no found');
+                  expect(result.body.errors[0].message).to.equal('Album not found');
                   expect(result.body.errors[0].statusCode).to.be.equal(404);
                   done();
                 });
