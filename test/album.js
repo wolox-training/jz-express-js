@@ -172,13 +172,8 @@ describe('albums', () => {
                 .post('/graph-albums')
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
                 .send(otherMutationAlbum)
-                .then(async result => {
-                  const album = await Album.find({
-                    where: {
-                      albumId: 1,
-                      userId: 1
-                    }
-                  });
+                .then(result => {
+                  console.log(`aqui estoy ${JSON.stringify(result.body)}`);
                   expect(result).have.status(200);
                   expect(result.body.errors[0].message).to.equal('Album not found');
                   expect(result.body.errors[0].statusCode).to.be.equal(404);

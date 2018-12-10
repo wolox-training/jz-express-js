@@ -28,7 +28,7 @@ exports.root = {
         throw new Error(errorName.albumNotFound);
       }
     } catch (err) {
-      throw err.message;
+      return err;
     }
   }
 };

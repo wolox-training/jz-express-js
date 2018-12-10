@@ -32,6 +32,7 @@ exports.init = app => {
       schema: albumSchema.schema,
       rootValue: albumSchema.root,
       formatError: err => {
+        console.log(`AQUIII ESTA EL ERROR ${JSON.stringify(err)}`);
         const error = getErrorCode(err.message);
         return {
           message: error.message,
