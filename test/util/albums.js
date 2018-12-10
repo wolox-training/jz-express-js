@@ -12,7 +12,7 @@ exports.mutationCreateAlbum = {
   }`
 };
 
-exports.albumCreateApi = {
+exports.albumCreatedApi = {
   id: '101',
-  title: 'juanito'
+  title: 'hola'
 };
