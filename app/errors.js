@@ -29,3 +29,5 @@ exports.albumsApiRedirection = message => internalError(message, exports.ALBUMS_
 
 exports.ALBUM_ORDER_ERROR = 'album_order_error';
 exports.albumOrderError = message => internalError(message, exports.ALBUM_ORDER_ERROR);
+
+exports.ALBUM_NOT_FOUND = { message: 'Album not found', statusCode: 404 };
