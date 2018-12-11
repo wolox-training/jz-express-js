@@ -1,7 +1,7 @@
 const graphql = require('graphql'),
   { buildSchema } = graphql,
   Album = require('../models').AlbumUser,
-  { errorName } = require('../errors'),
+  { ALBUM_NOT_FOUND } = require('../errors'),
   { getResources } = require('../services/album');
 
 exports.schema = buildSchema(`
@@ -20,15 +20,14 @@ exports.schema = buildSchema(`
 exports.root = {
   albums: () => getResources('/albums'),
   deleteAlbum: async (args, req) => {
-    const deleteAlbumPurchased = await Album.deleteAlbumPurchased({ userId: req.user.id, albumId: args.id });
-    try {
-      if (deleteAlbumPurchased === 1) {
-        return 'Album  is deleted';
-      } else {
-        throw new Error(errorName.albumNotFound);
-      }
-    } catch (err) {
-      return err;
+    const deleteAlbumPurchased = await Album.deleteAlbumPurchased({
+      userId: req.user.id,
+      albumId: args.id
+    });
+    if (deleteAlbumPurchased === 1) {
+      return 'Album  is deleted';
+    } else {
+      throw new Error('ALBUM_NOT_FOUND');
     }
   }
 };

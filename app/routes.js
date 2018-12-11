@@ -1,7 +1,7 @@
 const graphqlHTTP = require('express-graphql'),
   albumSchema = require('./schema/album'),
   auth = require('./middlewares/auth'),
-  { getErrorCode } = require(`./errors`),
+  { ALBUM_NOT_FOUND } = require(`./errors`),
   userController = require('./controllers/users'),
   albumController = require('./controllers/albums'),
   {
@@ -32,11 +32,9 @@ exports.init = app => {
       schema: albumSchema.schema,
       rootValue: albumSchema.root,
       formatError: err => {
-        const error = getErrorCode(err.message);
-        return {
-          message: error.message,
-          statusCode: error.statusCode
-        };
+        if (err.message === 'ALBUM_NOT_FOUND') {
+          return ALBUM_NOT_FOUND;
+        }
       },
       graphiql: true
     })(req, res);
