@@ -1,7 +1,7 @@
 const graphqlHTTP = require('express-graphql'),
   albumSchema = require('./schema/album'),
   auth = require('./middlewares/auth'),
-  { getErrorCode } = require('./schema/errors'),
+  { getErrorCode } = require(`./errors`),
   userController = require('./controllers/users'),
   albumController = require('./controllers/albums'),
   {
