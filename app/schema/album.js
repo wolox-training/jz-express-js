@@ -2,7 +2,7 @@ const graphql = require('graphql'),
   { buildSchema } = graphql,
   Album = require('../models').AlbumUser,
   { errorName } = require('../errors'),
-  { getResources } = require('../services/album');
+  { getResources, postResources } = require('../services/album');
 
 exports.schema = buildSchema(`
   type album {
@@ -13,7 +13,8 @@ exports.schema = buildSchema(`
       albums: [album]
   },
   type Mutation{
-    deleteAlbum(id:Int): String
+    deleteAlbum(id:Int): String,
+    createAlbum(title:String): album
     }	  
 `);
 
@@ -30,5 +31,13 @@ exports.root = {
     } catch (err) {
       return err;
     }
+  },
+  createAlbum: async (args, req) => {
+    const album = {
+      title: args.title,
+      userId: req.user.id
+    };
+    const createAlbum = await postResources('/albums', album);
+    return createAlbum;
   }
 };
