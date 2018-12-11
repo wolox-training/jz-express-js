@@ -7,7 +7,7 @@ const chai = require('chai'),
   config = require('../config'),
   User = require('../app/models').User,
   { createUser, login, userOne, adminUser } = require('./util/users'),
-  { queryAlbums, mutationAlbum, otherMutationAlbum } = require('./util/albums'),
+  { queryAlbums, mutationAlbumDelete } = require('./util/albums'),
   url = `${config.common.albumsApi.url}/albums`,
   { albums } = require('./util/albumsMocker'),
   { photos } = require('./util/photosMocker'),
@@ -131,7 +131,7 @@ describe('albums', () => {
                 .request(server)
                 .post('/graph-albums')
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-                .send(mutationAlbum)
+                .send(mutationAlbumDelete(1))
                 .then(async result => {
                   const album = await Album.find({
                     where: {
@@ -171,7 +171,7 @@ describe('albums', () => {
                 .request(server)
                 .post('/graph-albums')
                 .set(config.common.session.header_name, res.headers[config.common.session.header_name])
-                .send(otherMutationAlbum)
+                .send(mutationAlbumDelete(6))
                 .then(result => {
                   expect(result).have.status(200);
                   expect(result.body.errors[0].message).to.equal('Album not found');
