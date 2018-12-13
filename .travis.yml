@@ -18,6 +18,5 @@ services:
   - postgresql
 
 before_script:
-  - cd training
   - psql -c "CREATE DATABASE bookstest;" -U postgres
-  - training/node_modules/.bin/sequelize db:migrate
+  - ./training/node_modules/.bin/sequelize db:migrate
