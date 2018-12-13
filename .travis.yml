@@ -17,13 +17,11 @@ addons:
 services:
   - postgresql
 
-install: 
-- cd training
-- npm install
+
 
 before_script:
+  - cd training
   - psql -c "CREATE DATABASE bookstest;" -U postgres
-  - ./training/node_modules/.bin/sequelize db:migrate
+  - node_modules/.bin/sequelize db:migrate
 
-script:
-- npm test
+
