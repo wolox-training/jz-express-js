@@ -4,7 +4,7 @@ const { GraphQLList, GraphQLInt, GraphQLString, GraphQLNonNull } = require('grap
 
 exports.album = {
   description: 'delete albums from api',
-  type: bookType,
+  type: albumType,
   args: {
     deleteAlbum: {
       id: 'title',
@@ -13,6 +13,5 @@ exports.album = {
   },
   resolve: async (obj, { name }, context, info) => {
     const attributes = getSelectionSet(info);
- 
   }
 };
