@@ -1,20 +1,20 @@
 const {
-    GraphQLObjectType,
-    GraphQLNonNull,
-    GraphQLString,
-    GraphQLID,
-    GraphQLInt,
-    GraphQLInputObjectType
-  } = require('graphql');
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLID,
+  GraphQLInt,
+  GraphQLInputObjectType
+} = require('graphql');
 
-  exports.albumType = new GraphQLObjectType({
-    name: 'Album',
-    fields: {
-      id: {
-        type: new GraphQLNonNull(GraphQLID)
-      },
-      title: {
-        type: new GraphQLNonNull(GraphQLString)
-      }
+exports.albumType = new GraphQLObjectType({
+  name: 'Album',
+  fields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID)
+    },
+    title: {
+      type: new GraphQLNonNull(GraphQLString)
     }
-  });
+  }
+});
