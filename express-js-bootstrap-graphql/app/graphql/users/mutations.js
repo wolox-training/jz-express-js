@@ -1,6 +1,6 @@
-const { GraphQLNonNull, GraphQLBoolean } = require('graphql'),
+const { GraphQLNonNull, GraphQLBoolean, GraphQLString } = require('graphql'),
   { getResources, postResources } = require('../../services/trainingApi'),
-  { userInputType } = require('./types');
+  { userInputType, signUpInputType } = require('./types');
 
 exports.createUser = {
   description: 'create a single user',
@@ -12,8 +12,24 @@ exports.createUser = {
     }
   },
   resolve: async (obj, { data }, context, info) => {
-    const createUser = await postResources('/users', data);
-    console.log(`Aquii esta la creacion del usuario ${JSON.stringify(createUser)}`);
+    await postResources('/users', data);
     return true;
+  }
+};
+
+exports.signUp = {
+  description: 'login a single User',
+  type: GraphQLString,
+  args: {
+    data: {
+      name: 'data',
+      type: new GraphQLNonNull(signUpInputType)
+    }
+  },
+  resolve: async (obj, { data }, context, info) => {
+    const token = await postResources('/users/sessions', data);
+    console.log(`aquii esta ${JSON.stringify(token.headers)}`);
+    context.request.authorization = token.headers.authorization;
+    return token;
   }
 };
