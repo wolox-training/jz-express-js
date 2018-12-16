@@ -22,7 +22,7 @@ exports.getResources = source =>
 exports.postResources = (source, param) =>
   axios
     .post(`${url}${source}`, param)
-    .then(res => res.data)
+    .then(res => res)
     .catch(err => {
       logger.error(err);
       if (err.response.status === 300)
