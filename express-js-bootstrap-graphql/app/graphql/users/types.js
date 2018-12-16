@@ -10,9 +10,6 @@ const {
 exports.userType = new GraphQLObjectType({
   name: 'User',
   fields: {
-    id: {
-      type: new GraphQLNonNull(GraphQLID)
-    },
     name: {
       type: new GraphQLNonNull(GraphQLString)
     },
@@ -28,9 +25,6 @@ exports.userType = new GraphQLObjectType({
 exports.userInputType = new GraphQLInputObjectType({
   name: 'User',
   fields: {
-    id: {
-      type: new GraphQLNonNull(GraphQLID)
-    },
     name: {
       type: new GraphQLNonNull(GraphQLString)
     },
@@ -38,7 +32,14 @@ exports.userInputType = new GraphQLInputObjectType({
       type: new GraphQLNonNull(GraphQLString)
     },
     email: { type: GraphQLString },
-    password: { type: GraphQLString },
-    roleUser: { type: GraphQLString }
+    password: { type: GraphQLString }
+  }
+});
+
+exports.signUpInputType = new GraphQLInputObjectType({
+  name: 'UserLogin',
+  fields: {
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) }
   }
 });
