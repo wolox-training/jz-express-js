@@ -1,5 +1,6 @@
 const { GraphQLNonNull, GraphQLBoolean, GraphQLString } = require('graphql'),
   { getResources, postResources } = require('../../services/trainingApi'),
+  config = require('../../../config'),
   { userInputType, signUpInputType } = require('./types');
 
 exports.createUser = {
@@ -28,7 +29,7 @@ exports.signUp = {
   },
   resolve: async (obj, { data }, context, info) => {
     const token = await postResources('/users/sessions', data);
-    context.request.authorization = token.headers.authorization;
-    return token.headers.authorization;
+    context.res.header(config.common.session.header_name, token.headers.authorization);
+    return token.data;
   }
 };
