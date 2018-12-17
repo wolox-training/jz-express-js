@@ -1,5 +1,4 @@
 const { GraphQLList, GraphQLInt, GraphQLString, GraphQLNonNull } = require('graphql'),
-  { getSelectionSet } = require('../utils'),
   { albumType } = require('./types');
 
 exports.album = {
@@ -12,6 +11,6 @@ exports.album = {
     }
   },
   resolve: async (obj, { name }, context, info) => {
-    const attributes = getSelectionSet(info);
+    return true;
   }
 };
