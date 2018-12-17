@@ -28,8 +28,7 @@ exports.signUp = {
   },
   resolve: async (obj, { data }, context, info) => {
     const token = await postResources('/users/sessions', data);
-    console.log(`aquii esta ${JSON.stringify(token.headers)}`);
     context.request.authorization = token.headers.authorization;
-    return token;
+    return token.headers.authorization;
   }
 };

@@ -54,7 +54,7 @@ const init = () => {
           schema,
           context: {
             request: req.headers,
-            token: res.set(config.common.session.header_name, req.headers[config.common.session.header_name]),
+            token: res.set(config.common.session.header_name, req.headers.authorization),
             test: 'Hello World'
           },
           graphiql: true
