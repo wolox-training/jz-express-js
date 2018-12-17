@@ -52,11 +52,6 @@ const init = () => {
         '/',
         graphqlHTTP((req, res) => ({
           schema,
-          context: {
-            request: req.headers,
-            token: res.set(config.common.session.header_name, req.headers.authorization),
-            test: 'Hello World'
-          },
           graphiql: true
         }))
       );
