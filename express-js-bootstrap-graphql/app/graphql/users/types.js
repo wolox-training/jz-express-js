@@ -22,8 +22,21 @@ exports.userType = new GraphQLObjectType({
   }
 });
 
+exports.users = new GraphQLObjectType({
+  name: 'Users',
+  fields: {
+    name: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    lastName: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    email: { type: GraphQLString }
+  }
+});
+
 exports.userInputType = new GraphQLInputObjectType({
-  name: 'User',
+  name: 'UserInput',
   fields: {
     name: {
       type: new GraphQLNonNull(GraphQLString)
