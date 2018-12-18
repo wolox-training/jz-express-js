@@ -1,12 +1,22 @@
-const { GraphQLList, GraphQLString, GraphQLNonNull } = require('graphql'),
+const { GraphQLList, GraphQLInt, GraphQLString, GraphQLNonNull } = require('graphql'),
   { getResources } = require('../../services/trainingApi'),
-  { users } = require('./types');
+  { listUsers } = require('./types');
 
 exports.users = {
   description: 'return list of users',
-  type: new GraphQLList(users),
-  resolve: async (obj, name, context, info) => {
-    const userlist = await getResources('/users', context.headers);
-    return userlist.users;
+  type: listUsers,
+  args: {
+    page: {
+      name: 'number page',
+      type: GraphQLNonNull(GraphQLInt)
+    },
+    count: {
+      name: 'number page',
+      type: GraphQLNonNull(GraphQLInt)
+    }
+  },
+  resolve: async (obj, data, context, info) => {
+    const userlist = await getResources(`/users?count=${data.count}&page=${data.page}`, context.headers);
+    return userlist;
   }
 };
