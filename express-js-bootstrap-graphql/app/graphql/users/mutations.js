@@ -1,5 +1,5 @@
 const { GraphQLNonNull, GraphQLBoolean, GraphQLString } = require('graphql'),
-  { getResources, postResources } = require('../../services/trainingApi'),
+  { postResources } = require('../../services/trainingApi'),
   config = require('../../../config'),
   { userInputType, signUpInputType } = require('./types');
 
