@@ -10,7 +10,7 @@ exports.getResources = (source, headers) =>
   axios
     .get(`${url}${source}`, {
       headers: {
-        authorization: headers.authorization
+        authorization: headers.authorization || ''
       }
     })
     .then(res => res.data)
