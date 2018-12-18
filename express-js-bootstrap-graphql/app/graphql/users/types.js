@@ -4,10 +4,11 @@ const {
   GraphQLString,
   GraphQLID,
   GraphQLInt,
+  GraphQLList,
   GraphQLInputObjectType
 } = require('graphql');
 
-exports.userType = new GraphQLObjectType({
+const userType = new GraphQLObjectType({
   name: 'User',
   fields: {
     name: {
@@ -22,16 +23,20 @@ exports.userType = new GraphQLObjectType({
   }
 });
 
-exports.users = new GraphQLObjectType({
-  name: 'Users',
+exports.userType = userType;
+
+exports.listUsers = new GraphQLObjectType({
+  name: 'ListUser',
   fields: {
-    name: {
-      type: new GraphQLNonNull(GraphQLString)
+    users: {
+      type: new GraphQLNonNull(new GraphQLList(userType))
     },
-    lastName: {
-      type: new GraphQLNonNull(GraphQLString)
+    count: {
+      type: new GraphQLNonNull(GraphQLInt)
     },
-    email: { type: GraphQLString }
+    pages: {
+      type: new GraphQLNonNull(GraphQLInt)
+    }
   }
 });
 
