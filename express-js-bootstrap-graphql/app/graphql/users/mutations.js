@@ -33,3 +33,18 @@ exports.signUp = {
     return token.data;
   }
 };
+
+exports.upsertUserAdmin = {
+  description: 'upsert single userAdmin',
+  type: GraphQLString,
+  args: {
+    data: {
+      name: 'data',
+      type: new GraphQLNonNull(userInputType)
+    }
+  },
+  resolve: async (obj, { data }, context, info) => {
+    const upsertAdUser = await postResources('/admin/users', data, context.headers);
+    return upsertAdUser.data;
+  }
+};
