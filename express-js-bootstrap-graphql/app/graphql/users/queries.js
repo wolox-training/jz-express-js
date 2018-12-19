@@ -1,5 +1,6 @@
 const { GraphQLList, GraphQLInt, GraphQLString, GraphQLNonNull } = require('graphql'),
   { getResources } = require('../../services/trainingApi'),
+  { albumPhotos } = require('../albums/types'),
   { listUsers } = require('./types');
 
 exports.users = {
@@ -11,12 +12,27 @@ exports.users = {
       type: GraphQLNonNull(GraphQLInt)
     },
     count: {
-      name: 'number page',
+      name: 'number count',
       type: GraphQLNonNull(GraphQLInt)
     }
   },
   resolve: async (obj, data, context, info) => {
-    const userlist = await getResources(`/users?count=${data.count}&page=${data.page}`, context.headers);
-    return userlist;
+    const userList = await getResources(`/users?count=${data.count}&page=${data.page}`, context.headers);
+    return userList;
+  }
+};
+
+exports.usersPhotosAlbums = {
+  description: 'return list Albums photos',
+  type: new GraphQLList(albumPhotos),
+  args: {
+    id: {
+      name: 'id album',
+      type: GraphQLNonNull(GraphQLString)
+    }
+  },
+  resolve: async (obj, data, context, info) => {
+    const listAlbumsPhotos = await getResources(`/users/albums/${data.id}/photos`, context.headers);
+    return listAlbumsPhotos;
   }
 };
