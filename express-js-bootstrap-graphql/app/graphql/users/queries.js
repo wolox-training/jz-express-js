@@ -8,11 +8,11 @@ exports.users = {
   type: listUsers,
   args: {
     page: {
-      name: 'number page',
+      name: 'numberPage',
       type: GraphQLNonNull(GraphQLInt)
     },
     count: {
-      name: 'number count',
+      name: 'numberCount',
       type: GraphQLNonNull(GraphQLInt)
     }
   },
