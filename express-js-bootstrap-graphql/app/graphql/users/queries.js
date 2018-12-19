@@ -31,8 +31,8 @@ exports.usersPhotosAlbums = {
       type: GraphQLNonNull(GraphQLString)
     }
   },
-  resolve: async (obj, data, context, info) => {
-    const listAlbumsPhotos = await getResources(`/users/albums/${data.id}/photos`, context.headers);
+  resolve: async (obj, { data }, context, info) => {
+    const listAlbumsPhotos = await getResources(`/users/albums/${data}/photos`, context.headers);
     return listAlbumsPhotos;
   }
 };
@@ -46,8 +46,8 @@ exports.usersAlbums = {
       type: GraphQLNonNull(GraphQLString)
     }
   },
-  resolve: async (obj, data, context, info) => {
-    const listAlbums = await getResources(`/users/${data.id}/albums`, context.headers);
+  resolve: async (obj, { data }, context, info) => {
+    const listAlbums = await getResources(`/users/${data}/albums`, context.headers);
     return listAlbums;
   }
 };
