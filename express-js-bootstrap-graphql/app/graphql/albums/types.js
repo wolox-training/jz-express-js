@@ -18,3 +18,14 @@ exports.albumType = new GraphQLObjectType({
     }
   }
 });
+
+exports.albumPhotos = new GraphQLObjectType({
+  name: 'AlbumPhotos',
+  fields: {
+    albumId: { type: GraphQLString },
+    id: { type: GraphQLString },
+    title: { type: GraphQLString },
+    url: { type: GraphQLString },
+    thumbnailUrl: { type: GraphQLString }
+  }
+});
