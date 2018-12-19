@@ -1,16 +1,18 @@
 const { GraphQLList, GraphQLInt, GraphQLString, GraphQLNonNull } = require('graphql'),
+  { postResources } = require('../../services/trainingApi'),
   { albumType } = require('./types');
 
-exports.album = {
-  description: 'delete albums from api',
+exports.buyAlbum = {
+  description: 'Buy albums',
   type: albumType,
   args: {
-    deleteAlbum: {
-      id: 'title',
+    data: {
+      id: 'idAlbum',
       type: GraphQLNonNull(GraphQLInt)
     }
   },
-  resolve: async (obj, { name }, context, info) => {
-    return true;
+  resolve: async (obj, { data }, context, info) => {
+    const albumPurchased = await postResources(`/albums/${data}`, '', context.headers);
+    return albumPurchased.data;
   }
 };
