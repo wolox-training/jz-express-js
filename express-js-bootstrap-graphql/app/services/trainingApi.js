@@ -23,9 +23,13 @@ exports.getResources = (source, headers) =>
       throw errors.albumsApiError('service not available');
     });
 
-exports.postResources = (source, param) =>
+exports.postResources = (source, param, headers) =>
   axios
-    .post(`${url}${source}`, param)
+    .post(`${url}${source}`, param, {
+      headers: {
+        authorization: headers.authorization || ''
+      }
+    })
     .then(res => res)
     .catch(err => {
       logger.error(err);
