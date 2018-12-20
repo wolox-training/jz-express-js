@@ -4,7 +4,7 @@ const axios = require('axios'),
   config = require('../../config'),
   errors = require('../errors'),
   logger = require('../logger'),
-  url = config.common.albumsApi.url;
+  url = config.common.trainingApi.url;
 
 exports.getResources = (source, headers) =>
   axios
