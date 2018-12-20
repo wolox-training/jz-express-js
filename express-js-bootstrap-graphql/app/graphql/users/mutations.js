@@ -1,11 +1,11 @@
-const { GraphQLNonNull, GraphQLBoolean, GraphQLString } = require('graphql'),
+const { GraphQLNonNull, GraphQLString } = require('graphql'),
   { postResources } = require('../../services/trainingApi'),
   config = require('../../../config'),
   { userInputType, signUpInputType } = require('./types');
 
 exports.createUser = {
   description: 'create a single user',
-  type: GraphQLBoolean,
+  type: GraphQLString,
   args: {
     data: {
       name: 'data',
@@ -13,8 +13,8 @@ exports.createUser = {
     }
   },
   resolve: async (obj, { data }, context, info) => {
-    await postResources('/users', data);
-    return true;
+    const userCreated = await postResources('/users', data);
+    return userCreated.data;
   }
 };
 
