@@ -13,7 +13,7 @@ exports.createUser = {
     }
   },
   resolve: async (obj, { data }, context, info) => {
-    const userCreated = await postResources('/users', data);
+    const userCreated = await postResources('/users', data, '');
     return userCreated.data;
   }
 };
