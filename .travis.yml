@@ -26,6 +26,6 @@ before_script:
   - node_modules/.bin/sequelize db:migrate
   - cd ..
   - cd express-js-bootstrap-graphql
-  - npm installl
+  - npm install
 
 
