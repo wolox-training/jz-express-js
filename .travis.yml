@@ -24,5 +24,8 @@ before_script:
   - npm install
   - psql -c "CREATE DATABASE bookstest;" -U postgres
   - node_modules/.bin/sequelize db:migrate
+  - cd ..
+  - cd express-js-bootstrap-graphql
+  - npm installl
 
 
