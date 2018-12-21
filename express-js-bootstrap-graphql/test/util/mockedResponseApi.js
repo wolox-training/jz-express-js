@@ -1,5 +1,3 @@
 'use strict';
 
-exports.resCreateUser = {
-  data: ''
-};
+exports.resCreateUser = '';
