@@ -3,16 +3,8 @@
 const chai = require('chai'),
   dictum = require('dictum.js'),
   nock = require('nock'),
-  server = require('./../app'),
   config = require('../config'),
-  {
-    createUser,
-    login,
-    mutationAlbumDelete,
-    albumCreatedApi,
-    mutationCreateAlbum,
-    userOne
-  } = require('./util/usersQueries'),
+  { graphqlRequest, mutationCreateUser } = require('./util/usersQueries'),
   { resCreateUser } = require('./util/mockedResponseApi'),
   url = config.common.trainingApi.url,
   expect = chai.expect;
@@ -20,14 +12,13 @@ const chai = require('chai'),
 describe('grahphQlService ', () => {
   describe('test endpoints api with graphQl ', () => {
     it('should created user with out problems', done => {
-      const [mockedApi] = resCreateUser;
-
-      nock(`${url}/`)
-        .get('')
+      const mockedApi = resCreateUser;
+      nock(`${url}/users`)
+        .post('')
         .reply(201, mockedApi);
-      createUser(userOne).then(res => {
-        expect(res).have.status(201);
-        expect(res.body.data).to.equal('');
+      graphqlRequest(mutationCreateUser).then(response => {
+        expect(response).have.status(200);
+        expect(response.text).to.be.a('string');
         done();
       });
     });
