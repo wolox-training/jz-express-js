@@ -3,43 +3,23 @@
 const chai = require('chai'),
   server = require('../../app');
 
-exports.userOne = {
+const userOne = {
   name: 'sarahi',
   lastName: 'torres',
   email: 'sarahi12hg@wolox.com',
   password: 'woloxwoloA1520'
 };
 
-exports.userWithBadPassword = {
-  name: 'sarahi',
-  lastName: 'torres',
-  email: 'sarahidamaris12hg@woloxi.com',
-  password: 'facilfacil'
+const mutationCreateUser = {
+  query:
+    '\nmutation{\ncreateUser(data:{name:"sarahi",lastName:"Torres", email:"sarahitorres@wolox.jp",password:"AquiEAst156xcZ"})\n}'
 };
+exports.userOne = userOne;
 
-exports.anotherUser = {
-  name: 'sarahi',
-  lastName: 'torres',
-  email: 'sarahidamaris12hg@wolox.com',
-  password: 'woloxwoloA1520'
-};
+exports.mutationCreateUser = mutationCreateUser;
 
-exports.adminUser = {
-  name: 'damarisTorres',
-  lastName: 'palacios',
-  email: 'dami@wolox.com',
-  password: '$2y$10$2gFqkr3E8D6EGOc06WlbBOqlvLaVsDkNDxN68XXxM2iuLD8HZwD7S',
-  roleUser: 'administrator'
-};
-
-exports.createUser = user =>
+exports.graphqlRequest = query =>
   chai
     .request(server)
     .post('/')
-    .send(user);
-
-exports.login = credentials =>
-  chai
-    .request(server)
-    .post('/')
-    .send(credentials);
+    .send(query);
