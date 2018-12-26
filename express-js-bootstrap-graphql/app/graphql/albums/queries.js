@@ -1,7 +1,6 @@
-const { GraphQLList, GraphQLInt, GraphQLString, GraphQLNonNull } = require('graphql'),
+const { GraphQLList } = require('graphql'),
   { getResources } = require('../../services/trainingApi'),
-  { albumType } = require('./types'),
-  { listUsers } = require('../users/types');
+  { albumType } = require('./types');
 
 exports.albums = {
   description: 'return all list albums',
