@@ -10,16 +10,19 @@ const userOne = {
   password: 'woloxwoloA1520'
 };
 
-const mutationCreateUser = {
+const createUserMutation = {
   query:
     '\nmutation{\ncreateUser(data:{name:"sarahi",lastName:"Torres", email:"sarahitorres@wolox.jp",password:"AquiEAst156xcZ"})\n}'
 };
-exports.userOne = userOne;
 
-exports.mutationCreateUser = mutationCreateUser;
-
-exports.graphqlRequest = query =>
+const graphqlRequest = query =>
   chai
     .request(server)
     .post('/')
     .send(query);
+
+module.exports = {
+  userOne,
+  createUserMutation,
+  graphqlRequest
+};
