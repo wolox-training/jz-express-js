@@ -25,8 +25,8 @@ const userType = new GraphQLObjectType({
 
 exports.userType = userType;
 
-exports.listUsers = new GraphQLObjectType({
-  name: 'ListUser',
+exports.userList = new GraphQLObjectType({
+  name: 'UserList',
   fields: {
     users: {
       type: new GraphQLNonNull(new GraphQLList(userType))

@@ -1,13 +1,13 @@
-const { GraphQLList, GraphQLInt, GraphQLString, GraphQLNonNull } = require('graphql'),
+const { GraphQLInt, GraphQLNonNull } = require('graphql'),
   { postResources } = require('../../services/trainingApi'),
   { albumType } = require('./types');
 
 exports.buyAlbum = {
-  description: 'Buy albums',
+  description: 'buyAlbum',
   type: albumType,
   args: {
     data: {
-      id: 'idAlbum',
+      id: 'albumId',
       type: GraphQLNonNull(GraphQLInt)
     }
   },

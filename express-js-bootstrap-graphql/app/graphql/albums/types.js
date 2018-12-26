@@ -1,11 +1,4 @@
-const {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLID,
-  GraphQLInt,
-  GraphQLInputObjectType
-} = require('graphql');
+const { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLID } = require('graphql');
 
 exports.albumType = new GraphQLObjectType({
   name: 'Album',
@@ -19,8 +12,8 @@ exports.albumType = new GraphQLObjectType({
   }
 });
 
-exports.albumPhotos = new GraphQLObjectType({
-  name: 'AlbumPhotos',
+exports.albumPhoto = new GraphQLObjectType({
+  name: 'AlbumPhoto',
   fields: {
     albumId: { type: GraphQLString },
     id: { type: GraphQLString },
