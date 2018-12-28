@@ -6,6 +6,7 @@ const express = require('express'),
   config = require('./config'),
   schema = require('./app/graphql'),
   logger = require('./app/logger'),
+  getErrorCode = require('./app/errors'),
   DEFAULT_BODY_SIZE_LIMIT = 1024 * 1024 * 10,
   DEFAULT_PARAMETER_LIMIT = 10000;
 
@@ -46,7 +47,10 @@ const init = () => {
         '/',
         graphqlHTTP((req, res) => ({
           schema,
-          graphiql: true
+          graphiql: true,
+          formatError: err => {
+            return err.message;
+          }
         }))
       );
 
